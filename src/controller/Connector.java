@@ -69,7 +69,7 @@ public class Connector {
 	    	int id = rs.getInt(1);
 	    	
 	    	//Insert into availability table for each zip code using fooditemid from above insert    		
-	    	pstmt = conn.prepareStatement("Insert into Availability (food_item_id,zip_code,meal_time,begin_date,end_date) values (?,?,?,?,?)");
+	    	pstmt = conn.prepareStatement("Insert into Availability (food_item_id,zip_code,time,begin_date,end_date) values (?,?,?,?,?)");
 	    	for(int i=0;i<loc.size();i++) {		    	
 		    	pstmt.setString(1, Integer.toString(id));
 		    	pstmt.setString(2, Integer.toString(loc.get(i).getZip()));
@@ -104,7 +104,7 @@ public class Connector {
             
             //retrieve corresponding availability info using food id next
             
-            pstmt = conn.prepareStatement("Select zip_code,meal_time,begin_date,end_date from Availability where food_item_id=?");
+            pstmt = conn.prepareStatement("Select zip_code,time,begin_date,end_date from Availability where food_item_id=?");
     		pstmt.setString(1, Integer.toString(id));
             rs = pstmt.executeQuery();
             while(rs.next()) {
