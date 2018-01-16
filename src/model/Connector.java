@@ -152,15 +152,14 @@ public class Connector {
         return result;
     }
 
-    public void registerNewUserQuery(String fname, String lname, String email, String passWrd,
+    public boolean registerNewUserQuery(String fname, String lname, String email, String passWrd,
             String strAddress, String city, String state, int zipCode) {
         try {
             PreparedStatement pstmt2 = conn.prepareStatement("Select first_name from online_user where email=? ");
             pstmt2.setString(1, email);
             ResultSet rs = pstmt2.executeQuery();
             if (rs.next()) {
-                 response.userSuccessfullyUpdated(4);
-                 return;
+                return false;
             }
 
             PreparedStatement pstmt = conn.prepareStatement("Insert into ADDRESS (street, city, zip_code, state) values (?,?,?,?)");
@@ -186,15 +185,14 @@ public class Connector {
                 pstmt1.setString(8, status);
   
                 count = pstmt1.executeUpdate();
-                if (count == 1) 
-                     response.userSuccessfullyUpdated(5);
-                
-
+                if (count == 1)
+                    return true;
             }
         } catch (SQLException ex) {
             ex.getMessage();
             Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return false;
     }
     
     public boolean addZipToServiceArea(String zip){

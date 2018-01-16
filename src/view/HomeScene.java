@@ -24,7 +24,7 @@ public class HomeScene extends Scene {
                 return new LoginScene();
 
             case "Register":
-                //return new RegisterScene();
+                return new RegisterScene();
 
             case "Logout":
                 SessionState.customerEmail = null;
