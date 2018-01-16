@@ -1,6 +1,6 @@
 package view;
 
-import com.syntel.SessionState;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ public class HomeScene extends Scene {
 
     public HomeScene() {
         loggedIn = SessionState.loggedIn();
-        admin = loggedIn && SessionState.customerEmail.equals("admin");
+        admin = loggedIn && SessionState.user.getIsAdmin();
     }
 
     @Override
@@ -27,7 +27,7 @@ public class HomeScene extends Scene {
                 return new RegisterScene();
 
             case "Logout":
-                SessionState.customerEmail = null;
+                SessionState.user = null;
                 return new HomeScene();
 
             case "View available foods":
@@ -42,14 +42,15 @@ public class HomeScene extends Scene {
             case "Area management":
                 return new AreaManageScene();
 
-            case "Todays management":
-                break;
+           // case "Todays management":
+           //     break;
                 
             case "Package management":
                 return new PackageManagementScene();
 
             case "Order management":
-                break;
+                return new OrderManageScene();
+                
         }
 
         return new HomeScene();
