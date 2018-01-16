@@ -10,7 +10,7 @@ public class HomeScene extends Scene {
 
     public HomeScene() {
         loggedIn = SessionState.loggedIn();
-        admin = loggedIn && SessionState.customerEmail.equals("admin");
+        admin = loggedIn && connector.getAdmin(SessionState.customerEmail);
     }
 
     @Override
