@@ -297,7 +297,7 @@ public class Connector {
            pstmt.setString(1,email);
            ResultSet rs = pstmt.executeQuery();
            while (rs.next()){
-               if(rs.getInt(1) == 1)
+               if(rs.getString(1).equals("Yes"))
                     return true;
            }
        }catch(SQLException ex){
