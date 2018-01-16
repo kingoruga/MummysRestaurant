@@ -141,7 +141,7 @@ public class Connector {
                 fname = rs.getString(4);
             }
             if (pw.equals(password) && status.equals("Enabled")) {
-                result = fname;
+                result = cmd;
                 if (admin.equals("Yes")) 
                     result = "admin";       
             }
