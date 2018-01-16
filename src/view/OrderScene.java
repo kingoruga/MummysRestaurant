@@ -91,7 +91,7 @@ public class OrderScene extends Scene {
                         break;
 
                     case "Use default address":
-                        address = SessionState.customer.getAddress();
+                        address = SessionState.customerEmail;// .getAddress();
                         // fix this when we have more concrete classes
                         if (address == null) {
                             address = "";
@@ -254,7 +254,7 @@ public class OrderScene extends Scene {
                         break;
 
                     case "Use default payment":
-                        paymentInfo = SessionState.customer.getPaymentInfo();
+                        paymentInfo = SessionState.customerEmail;// .getPaymentInfo();
                         // fix this when we have more concrete classes
                         if (paymentInfo == null) {
                             paymentInfo = "";

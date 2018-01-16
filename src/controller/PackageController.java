@@ -1,13 +1,15 @@
 package controller;
 
 
+import model.FoodItem;
+
 public class PackageController {
 	
 	
 	private Connector conn = new Connector();
 	
 	
-	public void createNewItem(FoodItem item) {		
+	public void createNewItem(FoodItem item) {
 		
 		conn.createFoodQuery(item);		
 	}

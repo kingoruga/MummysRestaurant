@@ -1,6 +1,5 @@
 package view;
 
-//import com.syntel.DatabaseAction;
 import com.syntel.SessionState;
 
 import java.util.ArrayList;
@@ -18,16 +17,15 @@ public class LoginScene extends Scene {
         if (!loggingIn)
             return new HomeScene();
 
-        //SessionState.customer = DatabaseAction.getCustomer(email, password);
-
-        if (SessionState.customer == null) {
+        SessionState.customerEmail = connector.loginQuery(email, password);
+        
+        if (!SessionState.loggedIn()) {
             System.out.println("Login was unsuccessful.");
-            return this;
         }
         
-        if (SessionState.customer.isBanned()) {
-            System.out.println("This account is banned.");
-            SessionState.customer = null;
+        if (connector.userIsDisabledQuery(SessionState.customerEmail)) {
+            System.out.println("This account is disabled.");
+            SessionState.customerEmail = null;
         }
 
         return new HomeScene();
@@ -55,7 +53,6 @@ public class LoginScene extends Scene {
             selectedChoice = matchInputWithChoice(scanner.nextLine(), choices);
 
         } while (selectedChoice == null);
-
 
         switch (selectedChoice) {
             case "Set email":

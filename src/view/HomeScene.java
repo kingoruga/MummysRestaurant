@@ -12,7 +12,7 @@ public class HomeScene extends Scene {
 
     public HomeScene() {
         loggedIn = SessionState.loggedIn();
-        admin = loggedIn ? SessionState.customer.isAdmin() : false;
+        admin = loggedIn && SessionState.customerEmail.equals("admin");
     }
 
     @Override
@@ -27,7 +27,7 @@ public class HomeScene extends Scene {
                 //return new RegisterScene();
 
             case "Logout":
-                SessionState.customer = null;
+                SessionState.customerEmail = null;
                 return new HomeScene();
 
             case "View available foods":

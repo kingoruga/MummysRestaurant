@@ -95,6 +95,21 @@ public class Connector {
         }
     }
 
+    public boolean userIsDisabledQuery(String email) {
+        try (PreparedStatement pstmt = conn.prepareStatement("Select status from Online_user where email=?")) {
+            pstmt.setString(1, email);
+            pstmt.executeQuery();
+            ResultSet rs = pstmt.getResultSet();
+            String status = null;
+            while (rs.next())
+                status = rs.getString(0);
+            return status != null && !status.equals("Disabled");
+        } catch (Exception ex) {
+            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
     public void changePasswordQuery(String cmd, String password) {
         try (PreparedStatement pstmt = conn.prepareStatement("Update Online_user set password = ? where email=?")) {
             pstmt.setString(1, password);
@@ -130,7 +145,7 @@ public class Connector {
                     result = "admin";       
             }
 
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;

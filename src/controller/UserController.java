@@ -54,8 +54,6 @@ public class UserController {
         info.registerNewUser( fname, lname, email, passWrd, strAddress, city, state, zipCode);
     }
 
-
-
     public void userSuccessfullyUpdated(int i) {
         switch (i) {
             case 0: loginResponse.printUpdatedResponse(0); break;
