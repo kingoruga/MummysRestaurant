@@ -170,14 +170,14 @@ public class Connector {
             int count = pstmt.executeUpdate();
 
             if (count == 1) {
-                int admin = 0;
+                String admin = "No";
                 String status = "Enabled";
                 PreparedStatement pstmt1 = conn.prepareStatement
                   ("Insert into ONLINE_USER (first_name, last_name, is_admin, password, email, address_id, status ) "
                           + "values (?,?,?,?,?,(Select address_id from address where street=? and zip_code=?),?)"); //password will be encrypted in web app
                 pstmt1.setString(1, fname);
                 pstmt1.setString(2, lname);
-                pstmt1.setInt(3, admin);
+                pstmt1.setString(3, admin);
                 pstmt1.setString(4, passWrd);
                 pstmt1.setString(5, email);                
                 pstmt1.setString(6, strAddress);
