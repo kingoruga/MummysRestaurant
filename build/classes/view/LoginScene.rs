@@ -1,1 +1,0 @@
-com.syntel.Scenes.LoginScene
