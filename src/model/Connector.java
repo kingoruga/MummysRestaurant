@@ -102,8 +102,9 @@ public class Connector {
             ResultSet rs = pstmt.getResultSet();
             String status = null;
             while (rs.next())
-                status = rs.getString(0);
-            return status != null && !status.equals("Disabled");
+                status = rs.getString(1);
+            if (status != null)
+                return status.equals("Disabled");
         } catch (Exception ex) {
             Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
         }

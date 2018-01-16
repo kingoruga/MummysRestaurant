@@ -19,13 +19,13 @@ public class LoginScene extends Scene {
 
         SessionState.customerEmail = connector.loginQuery(email, password);
         
-        if (!SessionState.loggedIn()) {
-            System.out.println("Login was unsuccessful.");
-        }
-        
-        if (connector.userIsDisabledQuery(SessionState.customerEmail)) {
+        if (connector.userIsDisabledQuery(email)) {
             System.out.println("This account is disabled.");
             SessionState.customerEmail = null;
+        }
+        
+        else if (!SessionState.loggedIn()) {
+            System.out.println("Login was unsuccessful.");
         }
 
         return new HomeScene();
