@@ -6,5 +6,4 @@ public class Main {
         SceneManager sm = new SceneManager();
         sm.main();
     }
-    
 }
