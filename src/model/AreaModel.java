@@ -32,4 +32,12 @@ public class AreaModel {
         conn = new Connector();
         return conn.getFoodItemsInArea(zip);
     }
+    public boolean addPackagetoArea(String zip, String packageNo){
+        conn = new Connector();
+        return conn.addPackagetoArea(zip,packageNo);
+    }
+    public boolean removePackageFromArea(String zip, String packageNo){
+        conn = new Connector();
+        return conn.removePackageFromArea(zip,packageNo);
+    }
 }

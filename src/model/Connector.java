@@ -264,6 +264,32 @@ public class Connector {
             Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+    public boolean addPackagetoArea(String zip,String packageNo){
+       try{
+           PreparedStatement pstmt = conn.prepareStatement("Insert into Availability (food_item_id,zip_code) values (?,?)");
+           pstmt.setString(1,packageNo);
+           pstmt.setString(2,zip);
+           int count = pstmt.executeUpdate();
+           if (count == 1)
+               return true;
+       }catch(SQLException ex){
+           return false;
+       }
+       return false;
+   }
+   
+    public boolean removePackageFromArea(String zip,String packageNo){
+       try{
+           PreparedStatement pstmt = conn.prepareStatement("Delete from Availability where zip_code = ? and food_item_id = ?");
+           pstmt.setString(2,packageNo);
+           pstmt.setString(1,zip);
+           int count = pstmt.executeUpdate();
+           if (count == 1)
+               return true;
+       }catch(SQLException ex){
+           return false;
+       }
+       return false;
+   }
    
 }
