@@ -36,11 +36,18 @@ public class HomeScene extends Scene {
             case "View ongoing orders":
                 break;
 
-            // Implement scenes for these
-            case "Todays management":
             case "User management":
+                return new UserManagementScene();
+
             case "Area management":
+                return new AreaManageScene();
+
+            case "Todays management":
+                break;
+                
             case "Package management":
+                return new PackageManagementScene();
+
             case "Order management":
                 break;
         }
