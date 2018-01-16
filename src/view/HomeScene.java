@@ -1,7 +1,5 @@
 package view;
 
-import com.syntel.SessionState;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,6 +1,6 @@
-package com.syntel;
+package view;
 
-import com.syntel.Models.Order;
+import controller.Order;
 
 /**
  * This would be the held sessions state, maybe represented by

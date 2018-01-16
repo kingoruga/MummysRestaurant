@@ -1,4 +1,4 @@
-package com.syntel.Models;
+package controller;
 
 public class Customer {
 

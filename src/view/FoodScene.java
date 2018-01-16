@@ -1,9 +1,8 @@
 package view;
 
 //import com.syntel.DatabaseAction;
-import com.syntel.Models.Order;
-import com.syntel.SessionState;
-import com.syntel.Models.FoodItem;
+import controller.Order;
+import model.FoodItem;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,9 @@
-package com.syntel.Models;
+package controller;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import model.FoodItem;
 
 public class Order {
 
