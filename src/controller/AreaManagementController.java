@@ -28,4 +28,10 @@ public class AreaManagementController {
     public List<String> getFoodInAreas(String zip){
         return am.getFoodInAreas(zip);
     }
+    public boolean addPackagetoArea(String zip,String packageNo){
+        return am.addPackagetoArea(zip, packageNo);
+    }
+    public boolean removePackageFromArea(String zip,String packageNo){
+        return am.removePackageFromArea(zip,packageNo);
+    }
 }
