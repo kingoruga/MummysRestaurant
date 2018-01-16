@@ -1,4 +1,4 @@
-package view;
+import view.SceneManager;
 
 public class Main {
 
