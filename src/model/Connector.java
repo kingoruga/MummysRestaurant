@@ -170,7 +170,7 @@ public class Connector {
             int count = pstmt.executeUpdate();
 
             if (count == 1) {
-                int admin = 1;
+                int admin = 0;
                 String status = "Enabled";
                 PreparedStatement pstmt1 = conn.prepareStatement
                   ("Insert into ONLINE_USER (first_name, last_name, is_admin, password, email, address_id, status ) "
