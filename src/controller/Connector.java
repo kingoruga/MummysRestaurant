@@ -6,6 +6,9 @@
 package controller;
 
 //import controller.MenuController;
+import model.Availability;
+import model.FoodItem;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;

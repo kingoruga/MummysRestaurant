@@ -1,5 +1,7 @@
 package view;
 
+import model.Connector;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,8 +15,11 @@ public abstract class Scene {
 
     static Scanner scanner;
 
+    static Connector connector;
+
     static {
         scanner = new Scanner(System.in);
+        connector = new Connector();
     }
 
     /**

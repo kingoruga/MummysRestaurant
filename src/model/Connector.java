@@ -95,6 +95,22 @@ public class Connector {
         }
     }
 
+    public boolean userIsDisabledQuery(String email) {
+        try (PreparedStatement pstmt = conn.prepareStatement("Select status from Online_user where email=?")) {
+            pstmt.setString(1, email);
+            pstmt.executeQuery();
+            ResultSet rs = pstmt.getResultSet();
+            String status = null;
+            while (rs.next())
+                status = rs.getString(1);
+            if (status != null)
+                return status.equals("Disabled");
+        } catch (Exception ex) {
+            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
     public void changePasswordQuery(String cmd, String password) {
         try (PreparedStatement pstmt = conn.prepareStatement("Update Online_user set password = ? where email=?")) {
             pstmt.setString(1, password);
@@ -125,26 +141,25 @@ public class Connector {
                 fname = rs.getString(4);
             }
             if (pw.equals(password) && status.equals("Enabled")) {
-                result = fname;
+                result = cmd;
                 if (admin.equals("Yes")) 
                     result = "admin";       
             }
 
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
     }
 
-    public void registerNewUserQuery(String fname, String lname, String email, String passWrd,
+    public boolean registerNewUserQuery(String fname, String lname, String email, String passWrd,
             String strAddress, String city, String state, int zipCode) {
         try {
             PreparedStatement pstmt2 = conn.prepareStatement("Select first_name from online_user where email=? ");
             pstmt2.setString(1, email);
             ResultSet rs = pstmt2.executeQuery();
             if (rs.next()) {
-                 response.userSuccessfullyUpdated(4);
-                 return;
+                return false;
             }
 
             PreparedStatement pstmt = conn.prepareStatement("Insert into ADDRESS (street, city, zip_code, state) values (?,?,?,?)");
@@ -170,15 +185,14 @@ public class Connector {
                 pstmt1.setString(8, status);
   
                 count = pstmt1.executeUpdate();
-                if (count == 1) 
-                     response.userSuccessfullyUpdated(5);
-                
-
+                if (count == 1)
+                    return true;
             }
         } catch (SQLException ex) {
             ex.getMessage();
             Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return false;
     }
     
     public boolean addZipToServiceArea(String zip){

@@ -1,4 +1,4 @@
-package view;
+import view.SceneManager;
 
 public class Main {
 
@@ -6,4 +6,5 @@ public class Main {
         SceneManager sm = new SceneManager();
         sm.main();
     }
+    
 }

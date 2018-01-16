@@ -4,6 +4,9 @@ package view;
 import java.util.*;
 
 import com.syntel.*;
+import controller.PackageController;
+import model.Availability;
+import model.FoodItem;
 
 public class PackageManagementScene extends Scene {
 	
