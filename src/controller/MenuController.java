@@ -5,9 +5,8 @@
  */
 package controller;
 
-import java.util.List;
 import model.MenuInfo;
-import view.MealOptionsView;
+//import view.MealOptionsView;
 
 /**
  *
@@ -15,7 +14,7 @@ import view.MealOptionsView;
  */
 public class MenuController {
     MenuInfo info;
-    MealOptionsView mealsView;
+    //MealOptionsView mealsView;
     //private String foodItemId;
     private String name;
     private String desc;
@@ -75,14 +74,14 @@ public class MenuController {
         this.veg = veg;
     }
     
-     public void showMenu() {
-        info = new MenuInfo();
-        mealsView = new MealOptionsView();
-        List<MenuController> items = info.getMenuOptions();
-        items.forEach((mealItem) -> {
-             mealsView.printMenuItems(mealItem.toString());
-        });
-    }
+    /* public void showMenu() {
+    info = new MenuInfo();
+    mealsView = new MealOptionsView();
+    List<MenuController> items = info.getMenuOptions();
+    items.forEach((mealItem) -> {
+    mealsView.printMenuItems(mealItem.toString());
+    });
+    }*/
      
      
     @Override

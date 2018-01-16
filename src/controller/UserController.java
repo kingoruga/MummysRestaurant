@@ -6,7 +6,7 @@
 package controller;
 
 import model.UserInfo;
-import view.LoginView;
+
 
 /**
  *
@@ -16,7 +16,7 @@ public class UserController {
 
     private String email;
     UserInfo info = new UserInfo();
-    LoginView loginResponse = new LoginView();
+ 
 
     public void updateModelEnableUser(String userEmail) {
         info.adminEnableUser(email);
@@ -34,7 +34,7 @@ public class UserController {
         info.adminChangeUserPassword(userEmail, password);
     }
 
-    public void userControllerLogin(String email, String password) {
+    /*public void userControllerLogin(String email, String password) {
         info = new UserInfo();
         loginResponse = new LoginView();
         String result = info.loginUser(email, password);
@@ -47,24 +47,13 @@ public class UserController {
         else
              loginResponse.nonAdminUser(result);
     }
-
+    */
     public void userControllerRegister(String fname, String lname, String email, String passWrd, String strAddress, 
                                                      String city, String state, int zipCode) {
         info = new UserInfo();
         info.registerNewUser( fname, lname, email, passWrd, strAddress, city, state, zipCode);
     }
 
-    public void userSuccessfullyUpdated(int i) {
-        switch (i) {
-            case 0: loginResponse.printUpdatedResponse(0); break;
-            case 1: loginResponse.printUpdatedResponse(1); break;
-            case 2: loginResponse.printUpdatedResponse(2); break;
-            case 3: loginResponse.printUpdatedResponse(3); break;
-            case 4: loginResponse.printUpdatedResponse(4); break;
-            case 5: loginResponse.printUpdatedResponse(5); break;
-            case 6: loginResponse.printUpdatedResponse(6); break;
-            default: break;
-        }
-    }
+
 
 }

@@ -1,6 +1,8 @@
-package com.syntel;
+package view;
 
-import com.syntel.Models.Order;
+import model.OnlineUser;
+import model.Orders;
+
 
 /**
  * This would be the held sessions state, maybe represented by
@@ -11,11 +13,11 @@ public class SessionState {
     private SessionState() {}
 
     public static boolean loggedIn() {
-        return customerEmail != null && !customerEmail.equals(" ");
+        return user != null;
     }
 
-    public static String customerEmail = null;
+    public static OnlineUser user = null;
     
-    public static Order ongoingOrder = null;
+    public static Orders ongoingOrder = null;
 
 }
