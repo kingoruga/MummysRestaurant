@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toMap;
+import java.util.Date;
 
 /**
  *
@@ -569,19 +570,20 @@ public class Connector {
     }
     
     
-    public void getFoodQuery(FoodItem item) {
+
+    public void getFoodQuery(Fooditem item) {  
         try{
             DateFormat output = new SimpleDateFormat("dd-MMM-yy");
             DateFormat input = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date date;
-            PreparedStatement pstmt = conn.prepareStatement("Select description, price, type, is_veg from food_item where name=?");
+            Date date; 
+            PreparedStatement pstmt = conn.prepareStatement("Select description, price, type, is_veg from food_item where name=?"); 
             pstmt.setString(1, item.getName());
             ResultSet rs = pstmt.executeQuery();
-            if(rs.next()){
+            if(rs.next()){ 
                 item.setDescription(rs.getString(1));
                 item.setPrice(rs.getFloat(2));
                 item.setType(rs.getString(3));
-                item.setIsVeg(rs.getString(4).equalsIgnoreCase("yes"));
+                item.setVeg(rs.getString(4));
                 pstmt = conn.prepareStatement("Select zip_code,time,begin_date,end_date from Availability where food_item_id=(Select food_item_id from food_item where name=?)");
                 pstmt.setString(1, item.getName());
                 rs = pstmt.executeQuery();
@@ -593,48 +595,24 @@ public class Connector {
                     loc.setStart_date(output.format(date));
                     date = input.parse(rs.getString(4));
                     loc.setEnd_date(output.format(date));
-                    // item.addAvailability(loc);
+                    item.addAvailability(loc);
                 }
             }
         }catch(Exception ex) {
             Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    public List<Availability> getAvailabilities(FoodItem item) {
-        List<Availability> availabilities = new ArrayList<>();
-        try {
-
-            PreparedStatement statement = conn.prepareStatement("" +
-                    "select a.* from AVAILABILITY a, FOOD_ITEM f where f.FOOD_ITEM_ID = ?");
-            statement.setInt(1, ByteBuffer.wrap(item.getFoodItemId()).getShort());
-
-            ResultSet rs = statement.executeQuery();
-            DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-            while (rs.next()){
-                Availability a = new Availability();
-                a.setZip(rs.getInt("zip_code"));
-                a.setStart_date(df.format(rs.getDate("begin_date")));
-                a.setEnd_date(df.format(rs.getDate("end_date")));
-                a.setMeal(rs.getString("time"));
-            }
-        }catch(SQLException ex) {
-            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return availabilities;
-    }
     
     
-    public void createFoodQuery(FoodItem item) {
+    public void createFoodQuery(Fooditem item) {  
         try {
-            List<Availability> loc = getAvailabilities(item);
+            ArrayList<Availability> loc = item.getAvailability();
             PreparedStatement pstmt = conn.prepareStatement("Insert into Food_item (name,description,price,type,is_veg) values(?,?,?,?,?)");
             pstmt.setString(1, item.getName());
             pstmt.setString(2,item.getDescription());
             pstmt.setString(3, Float.toString(item.getPrice()));
             pstmt.setString(4, item.getType());
-            pstmt.setString(5, item.getIsVeg() ? "Yes" : "No");
+            pstmt.setString(5, item.getVeg());
             pstmt.executeUpdate();
             //Insert into availability table for each zip code using fooditemid from above insert
             pstmt = conn.prepareStatement("Insert into Availability (food_item_id,zip_code,time,begin_date,end_date) values ((select food_item_id from food_item where name=?),?,?,?,?)");
@@ -648,92 +626,23 @@ public class Connector {
                 pstmt.executeUpdate();
             }
         }catch(SQLException ex) {
-            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex); 
         }
     }
        
     
-    public void removeFoodQuery(String name) {
+    public void removeFoodQuery(String name) { 
         try {
             PreparedStatement pstmt = conn.prepareStatement("Delete from Food_item where name=?");
             pstmt.setString(1, name);
             pstmt.executeQuery();
         }catch(SQLException ex) {
-            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex); 
+        }  
     }
-
-    public void addOrder(Orders order, Address address, OnlineUser user) {
-        
-        DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-        Date orderDate = new Date();
-        Date deliveryDate;
-
-        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-        try {
-            deliveryDate = df.parse(order.getDeliveryDate());
-        } catch (ParseException e) {
-            deliveryDate = new Date();
-        }
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(deliveryDate);
-        cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(order.getTime()));
-        Date deliveryTime = cal.getTime(); // returns new date object, one hour in the future
-
-        try {
-
-            // insert into orders
-
-            PreparedStatement pstmt = conn.prepareStatement("Insert into ORDERS "
-                    + "(user_id, address_id, payment_type, order_date, price, delivery_date, delivery_time) "
-                    + "values (?,?,?,?,?,?,?)");
-
-            pstmt.setInt(1, user.getUserId());
-            pstmt.setInt(2, address.getAddressId());
-            pstmt.setString(3, order.getPaymentMethod());
-            pstmt.setDate(4, new java.sql.Date(orderDate.getTime()));
-            pstmt.setDouble(5, order.getPrice());
-            pstmt.setDate(6, new java.sql.Date(deliveryDate.getTime()));
-            pstmt.setDate(7, new java.sql.Date(deliveryTime.getTime()));
-            int count = pstmt.executeUpdate();
-            if (count == 1) {
-                System.out.println("An order has been placed.");
-            }
-
-            // Add all to order_items
-            // create a food item -> count of food item map, not adding
-            // any duplicates based on their key id
-
-            Map<FoodItem, Integer> items = new HashMap<>();
-            Set<Integer> ids = new HashSet<>();
-            order.getItems().forEach(f -> {
-                int id = ByteBuffer.wrap(f.getFoodItemId()).getInt();
-                if (!ids.contains(id)) {
-                    items.put(f, 0);
-                    ids.add(id);
-                }
-                items.put(f, items.get(f) + 1);
-            });
-
-            for(Map.Entry<FoodItem, Integer> entry : items.entrySet()) {
-                pstmt = conn.prepareStatement("INSERT INTO " +
-                        "ORDER_ITEMS (order_id, food_item_id, quantity)" +
-                        "VALUES( (SELECT order_id FROM orders WHERE price=? AND order_date=? AND user_id=? and ROWNUM = 1), ?, ?)");
-
-                pstmt.setDouble(1, order.getPrice());
-                pstmt.setDate(2, new java.sql.Date(orderDate.getTime()));
-                pstmt.setInt(3, user.getUserId());
-                pstmt.setInt(4, ByteBuffer.wrap(entry.getKey().getFoodItemId()).getInt());
-                pstmt.setInt(5, entry.getValue());
-                pstmt.executeUpdate();
-            }
-
-
-        } catch (Exception e) {
-            System.out.println("Order failed.");
-        }
-    }
-
+    
+    
+    
+   
 }
 

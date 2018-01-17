@@ -10,7 +10,7 @@ public class PackageController {
 	private Connector conn = new Connector();
 	
 	
-	public void createNewItem(FoodItem item) {
+	public void createNewItem(Fooditem item) {
 		
 		conn.createFoodQuery(item);		
 	}
@@ -20,7 +20,7 @@ public class PackageController {
 		conn.removeFoodQuery(name);
 	}
 	
-	public void getFoodItem(FoodItem item) {
+	public void getFoodItem(Fooditem item) {
 		
 		conn.getFoodQuery(item);			
 	}	

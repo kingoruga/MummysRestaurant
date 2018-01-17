@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 
-
 /**
  *
  * @author syntel
@@ -25,7 +24,7 @@ import model.FoodItem;
 
 public class PackageManagementScene extends Scene {
 	
-	private FoodItem fItem;
+	private Fooditem fItem;
 	private Availability loc;
 	private String userInput;
 	private String name;
@@ -40,7 +39,7 @@ public class PackageManagementScene extends Scene {
 	public Scene transitionNext() {
 		
 		controller = new PackageController();
-		fItem = new FoodItem();
+		fItem = new Fooditem();
 		
 		
 		switch(selectedChoice) {

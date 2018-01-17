@@ -200,7 +200,7 @@ public class OrderScene extends Scene {
                 }
                 break;
 
-            case Payment:
+            case Payment: 
 
                 float payment = (float)SessionState.ongoingOrder.getItems().stream().mapToDouble(FoodItem::getPrice).sum();
 

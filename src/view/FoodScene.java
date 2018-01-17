@@ -7,6 +7,7 @@ import model.FoodItem;
 import model.Orders;
 
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +44,6 @@ public class FoodScene extends Scene {
                 
             case "Order":
                 // Move items to session, go to next state
-                SessionState.ongoingOrder = new Orders();
                 SessionState.ongoingOrder.setItems(addedItems);
                 return new OrderScene();
         }
