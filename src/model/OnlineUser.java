@@ -10,17 +10,17 @@ package model;
  * @author syntel
  */
 public class OnlineUser {
-    private byte[] UserId;
+    private int UserId;
     private String FirstName;
     private String LastName;
     private String Email;
     private String Password;
-    private byte[] AddressId;
+    private int AddressId;
     private boolean IsAdmin;
     private boolean IsBanned;
     private Address address;
 
-    public OnlineUser(byte[] id, String fname, String lname, String isAdmin, String email, byte[] addressId, String status){
+    public OnlineUser(int id, String fname, String lname, String isAdmin, String email, int addressId, String status){
         this.UserId = id;
         this.FirstName = fname;
         this.LastName = lname;
@@ -39,11 +39,11 @@ public class OnlineUser {
     }
 
            
-    public byte[] getUserId() {
+    public int getUserId() {
         return UserId;
     }
 
-    public void setUserId(byte[] UserId) {
+    public void setUserId(int UserId) {
         this.UserId = UserId;
     }
 
@@ -91,11 +91,11 @@ public class OnlineUser {
         this.IsBanned = IsBanned;
     }
     
-    public byte[] getAddressId() {
+    public int getAddressId() {
         return AddressId;
     }
 
-    public void setAddressId(byte[] AddressId) {
+    public void setAddressId(int AddressId) {
         this.AddressId = AddressId;
     }
 

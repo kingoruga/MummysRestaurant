@@ -3,9 +3,9 @@ package model;
 import java.util.ArrayList;
 
 public class Orders {
-    private byte[] OrderId;
-    private byte[] UserId;
-    private byte[] AddressId;
+    private int OrderId;
+    private int UserId;
+    private int AddressId;
     private String PaymentMethod;
     private String OrderDate;
     private String DeliveryDate;
@@ -22,8 +22,10 @@ public class Orders {
     public void setUser(OnlineUser user) {
         this.user = user;
     }
+
+    public Orders() {}
      
-    public Orders(byte[] orderId, byte[] userId, byte[] addressId, String payment, String oDate, float price, String dDate, String dTime){
+    public Orders(int orderId, int userId, int addressId, String payment, String oDate, float price, String dDate, String dTime){
          this.OrderId = orderId;
          this.UserId = userId;
          this.AddressId = addressId;
@@ -35,27 +37,27 @@ public class Orders {
     }
      
     
-    public byte[] getOrderId() {
+    public int getOrderId() {
         return OrderId;
     }
 
-    public void setOrderId(byte[] OrderId) {
+    public void setOrderId(int OrderId) {
         this.OrderId = OrderId;
     }
 
-    public byte[] getUserId() {
+    public int getUserId() {
         return UserId;
     }
 
-    public void setUserId(byte[] UserId) {
+    public void setUserId(int UserId) {
         this.UserId = UserId;
     }
 
-    public byte[] getAddressId() {
+    public int getAddressId() {
         return AddressId;
     }
 
-    public void setAddressId(byte[] AddressId) {
+    public void setAddressId(int AddressId) {
         this.AddressId = AddressId;
     }
 
@@ -131,7 +133,7 @@ public class Orders {
     public String toString()
     {
         StringBuilder toReturn = new StringBuilder();
-        toReturn.append( ByteId.bytesToHex(OrderId) );
+        toReturn.append( Integer.toString(OrderId) );
         toReturn.append( "\t" );
         toReturn.append( PaymentMethod );
         toReturn.append( "\t" );

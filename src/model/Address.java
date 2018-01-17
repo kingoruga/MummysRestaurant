@@ -3,7 +3,7 @@ package model;
 
 
 public class Address {
-    private byte[] AddressId;
+    private int AddressId;
     private String Street1;
     private String Street2;
     private String City;
@@ -11,11 +11,12 @@ public class Address {
     private String Zip;
     private boolean IsDeliverable;
 
-    public byte[] getAddressId() {
+
+    public int getAddressId() {
         return AddressId;
     }
 
-    public void setAddressId(byte[] AddressId) {
+    public void setAddressId(int AddressId) {
         this.AddressId = AddressId;
     }
 

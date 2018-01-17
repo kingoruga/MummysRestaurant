@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 
-
 /**
  *
  * @author syntel
@@ -18,7 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import controller.PackageController; 
 import model.Availability; 
-import model.Fooditem;
+import model.FoodItem;
 
 
 
@@ -106,7 +105,7 @@ public class PackageManagementScene extends Scene {
 					System.out.println("Vegetarian? (yes/no): ");
 					userInput = scanner.nextLine();
 					if(userInput.toUpperCase().equals("YES") || userInput.toUpperCase().equals("NO")) {
-						fItem.setVeg(userInput);
+						fItem.setIsVeg(userInput.equalsIgnoreCase("yes"));
 						valid = true;
 					}else {
 						System.out.println("Invalid Input");
@@ -266,7 +265,7 @@ public class PackageManagementScene extends Scene {
 						System.out.println("Vegetarian? (yes/no): ");
 						userInput = scanner.nextLine();
 						if(userInput.toUpperCase().equals("YES") || userInput.toUpperCase().equals("NO")) {
-							fItem.setVeg(userInput);
+							fItem.setIsVeg(userInput.equalsIgnoreCase("yes"));
 							valid = true;
 						}else {
 							System.out.println("Invalid Input");
@@ -277,7 +276,7 @@ public class PackageManagementScene extends Scene {
 					
 				case "Availability Info":
 					
-					ArrayList<Availability> locs = fItem.getAvailability();
+					List<Availability> locs = connector.getAvailabilities(fItem);
 					zips.clear();
 					for(int i=0;i<locs.size();i++) {
 						zips.add(Integer.toString(locs.get(i).getZip()));
@@ -395,8 +394,9 @@ public class PackageManagementScene extends Scene {
 				}
 				
 			}					
-			
-			fItem.addAvailability(loc);
+
+
+			// fItem.addAvailability(loc);
 		
 		}
 		
@@ -406,7 +406,7 @@ public class PackageManagementScene extends Scene {
 		validChoices = new ArrayList<String>();
 		
 		List<String> locChoices = new ArrayList<>();
-		ArrayList<Availability> locs = fItem.getAvailability();
+		List<Availability> locs = connector.getAvailabilities(fItem);
 		
 		locChoices.add("Zip");
 		locChoices.add("Meal Time (Breakfast/Lunch/Dinner)");		

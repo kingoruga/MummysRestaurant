@@ -10,9 +10,7 @@ public class HomeScene extends Scene {
 
     public HomeScene() {
         loggedIn = SessionState.loggedIn();
-
         admin = loggedIn && SessionState.user.getIsAdmin();
-
     }
 
     @Override
@@ -71,7 +69,7 @@ public class HomeScene extends Scene {
         }
         
         if (admin) {
-            choices.add("Todays management");
+            //choices.add("Todays management");
             choices.add("User management");
             choices.add("Area management");
             choices.add("Package management");

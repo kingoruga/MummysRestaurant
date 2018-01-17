@@ -7,19 +7,24 @@ package model;
 
 import controller.MenuController;
 import controller.UserController;
+
+import java.nio.ByteBuffer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.ParseException;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toMap;
+import java.util.Date;
 
 /**
  *
@@ -129,25 +134,25 @@ public class Connector {
     }
 
     public OnlineUser loginQuery(String email, String password) {
-        byte[] userid = null;
+        int userid=0;
         String firstName = " ";
         String lastName = "";
         String isAdmin = "";
-        byte[] addressId = null;
+        int addressId=0;
         String pw = "";
         String status = "";
         try (PreparedStatement pstmt = conn.prepareStatement("Select user_id, first_name, last_name, is_admin, password, "
-                + ", address_id, status from online_user where email=?")) {
+                + " address_id, status from online_user where email=?")) {
             pstmt.setString(1, email);
             pstmt.executeQuery();
             ResultSet rs = pstmt.getResultSet();
             while (rs.next()) {
-                userid = rs.getBytes(1);
+                userid = rs.getInt(1);
                 firstName = rs.getString(2);
                 lastName = rs.getString(3);
                 isAdmin = rs.getString(4);
                 pw = rs.getString(5);
-                addressId = rs.getBytes(6);
+                addressId = rs.getInt(6);
                 status = rs.getString(7);
             }
             
@@ -191,11 +196,11 @@ public class Connector {
                 pstmt1.setString(2, lname);
                 pstmt1.setInt(3, admin);
                 pstmt1.setString(4, passWrd);
-                pstmt1.setString(5, email);                
+                pstmt1.setString(5, email);
                 pstmt1.setString(6, strAddress);
                 pstmt1.setInt(7, zipCode);
                 pstmt1.setString(8, status);
-  
+
                 count = pstmt1.executeUpdate();
                 if (count == 1)
                     return true;
@@ -205,7 +210,7 @@ public class Connector {
         }
         return false;
     }
-    
+
     public boolean addZipToServiceArea(String zip){
         try{
             PreparedStatement pstmt = conn.prepareStatement("insert into service_areas (zip_code) values (?)");
@@ -219,7 +224,7 @@ public class Connector {
         }
         return false;
     }
-    
+
     public boolean removeZipFromServiceArea(String zip){
         try{
             PreparedStatement pstmt = conn.prepareStatement("Delete from service_areas where zip_code = ?");
@@ -263,6 +268,54 @@ public class Connector {
         return foodInArea;
     }
 
+    public List<FoodItem> foodAvailableFor(String email) {
+
+        // get the users zipcode
+        int zipcode = 0;
+
+        try {
+            PreparedStatement pstmt
+                    = conn.prepareStatement("select a.zip_code "
+                    + "from online_user o, address a "
+                    + "where o.address_id = a.address_id "
+                    + "and o.email = ?");
+            pstmt.setString(1, email);
+            ResultSet result = pstmt.executeQuery();
+            while (result.next()) {
+                zipcode = result.getInt("zip_code");
+            }
+        } catch (SQLException se) {
+        }
+
+        // get the food
+        List<FoodItem> foods = new ArrayList<>();
+
+        try {
+            PreparedStatement pstmt
+                    = conn.prepareStatement("select f.food_item_id, f.name, f.description, f.price, f.type, f.is_veg "
+                    + "from food_item f, availability a "
+                    + "where f.FOOD_ITEM_ID = a.FOOD_ITEM_ID "
+                    + "and a.zip_code = ?");
+            pstmt.setInt(1, zipcode);
+            ResultSet result = pstmt.executeQuery();
+            while (result.next()) {
+                FoodItem food = new FoodItem();
+                int id = Integer.parseInt(result.getString("food_item_id"));
+                food.setFoodItemId(ByteBuffer.allocate(16).putInt(id).array());
+                food.setName(result.getString("name"));
+                food.setDescription(result.getString("description"));
+                food.setPrice(result.getFloat("price"));
+                food.setType(result.getString("type"));
+                food.setIsVeg(result.getString("is_veg").equalsIgnoreCase("yes"));
+                foods.add(food);
+            }
+
+        } catch (SQLException ex) {
+        }
+
+        return foods;
+    }
+
    public void deleteMenuItem(String cmd) {
         try {
             PreparedStatement pstmt = conn.prepareStatement("Delete from Food_item where name=?");
@@ -275,30 +328,30 @@ public class Connector {
             Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-   
+
    /*
         Returns the OnlineUser that corresponds to the id given.
     */
-    public OnlineUser getUserById( byte[] userId )
+    public OnlineUser getUserById( int userId )
     {
         try
         {
             //PreparedStatement pstmt = conn.prepareStatement("Select Food_item, description, price from food_item");
             PreparedStatement st = conn.prepareStatement( "SELECT * FROM online_user WHERE user_id=?" );
             //select the orders and order them by the column given
-            st.setBytes(1, userId );
+            st.setInt(1, userId );
             //st.setShort( 1, addressId );
             ResultSet rs = st.executeQuery();
             if (rs.next())
             {
                 //OnlineUser(byte[] id, String fname, String lname, String isAdmin, String pword, String email, int addressId, String status){
                 OnlineUser toReturn = new OnlineUser(
-                        rs.getBytes( "user_id" ),
+                        rs.getInt( "user_id" ),
                         rs.getString( "first_name" ),
                         rs.getString( "last_name" ),
                         rs.getString( "is_admin" ),
                         rs.getString( "email" ),
-                        rs.getBytes( "address_id" ),
+                        rs.getInt( "address_id" ),
                         rs.getString( "status" )
                 );
                 
@@ -317,14 +370,14 @@ public class Connector {
     /*
         Returns the address that corresponds to the id given.
     */
-    public Address getAddressById( byte[] addressId )
+    public Address getAddressById( int addressId )
     {
         try
         {
             //PreparedStatement pstmt = conn.prepareStatement("Select Food_item, description, price from food_item");
             PreparedStatement st = conn.prepareStatement( "SELECT * FROM address WHERE address_id=?" );
             //select the orders and order them by the column given
-            st.setBytes(1, addressId );
+            st.setInt(1, addressId );
             ResultSet rs = st.executeQuery();
             if (rs.next())
             {
@@ -354,9 +407,9 @@ public class Connector {
              //public Orders(int orderId, int userId, int addressId, String payment, String oDate, float price, String dDate, String dTime)
              Orders order = new Orders(
                      //convert the order_id from bytes to an integer
-                     rs.getBytes( "order_id" ),
-                     rs.getBytes( "user_id" ),
-                     rs.getBytes( "address_id" ),
+                     rs.getInt( "order_id" ),
+                     rs.getInt( "user_id" ),
+                     rs.getInt( "address_id" ),
                      rs.getString( "payment_type" ),
                      rs.getString( "order_date" ),
                      rs.getFloat( "price" ),
@@ -517,6 +570,7 @@ public class Connector {
     }
     
     
+
     public void getFoodQuery(Fooditem item) {  
         try{
             DateFormat output = new SimpleDateFormat("dd-MMM-yy");
@@ -535,7 +589,7 @@ public class Connector {
                 rs = pstmt.executeQuery();
                 while(rs.next()) {
                     Availability loc = new Availability();
-                    loc.setZip(rs.getInt(1)); 
+                    loc.setZip(rs.getInt(1));
                     loc.setMeal(rs.getString(2));
                     date = input.parse(rs.getString(3));
                     loc.setStart_date(output.format(date));
@@ -591,7 +645,4 @@ public class Connector {
     
    
 }
-
-
-
 

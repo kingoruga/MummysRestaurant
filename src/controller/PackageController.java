@@ -2,7 +2,7 @@ package controller;
 
 
 import model.Connector;
-import model.Fooditem;
+import model.FoodItem;
 
 public class PackageController {
 	

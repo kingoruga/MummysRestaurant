@@ -19,7 +19,7 @@ public class FoodItem {
     private String Image;
     private int Availability;
 
-    public FoodItem(byte[] id, String name, String description, float price, String type, boolean veg, String image, int availability){
+    public FoodItem(int id, String name, String description, float price, String type, boolean veg, String image, int availability){
         this.FoodItemId = id;
         this.Name = name;
         this.Description = description;
@@ -30,7 +30,7 @@ public class FoodItem {
         this.Availability = availability;
     }
     
-    public byte[] getFoodItemId() {
+    public int getFoodItemId() {
         return FoodItemId;
     }
 
@@ -102,5 +102,4 @@ public class FoodItem {
         toReturn.append( Description );
         return toReturn.toString();
     }
-
 }

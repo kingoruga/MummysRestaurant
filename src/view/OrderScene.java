@@ -6,6 +6,10 @@
 package view;
 
 
+import model.Address;
+import model.FoodItem;
+import model.Orders;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,11 +26,11 @@ public class OrderScene extends Scene {
     private State state;
 
     // Both of these fields would be more complex classes later on
-    private String address;
-    private String paymentInfo;
+    private Address address;
+    private String paymentMethod;
     private String deliveryDate;
     private int deliveryTime;
-    private Order order;
+    private Orders order;
     private boolean purchasing;
 
     public OrderScene() {
@@ -42,10 +46,16 @@ public class OrderScene extends Scene {
                 return new FoodScene();
 
             case "Finish":
-                order.setDeliveryAddress(address);
+                order.setOrderAddress(address);
                 order.setDeliveryDate(deliveryDate);
-                order.setDeliveryTime(deliveryTime);
-                //DatabaseAction.addOrder(SessionState.customer, order);
+                order.setPaymentMethod(paymentMethod);
+                order.setTime(Integer.toString(deliveryTime));
+
+                float payment = (float)SessionState.ongoingOrder.getItems().stream().mapToDouble(FoodItem::getPrice).sum();
+                order.setPrice(payment);
+
+                connector.addOrder(order, SessionState.user.getAddress(), SessionState.user);
+
                 return new HomeScene();
         }
 
@@ -60,13 +70,7 @@ public class OrderScene extends Scene {
         switch (state) {
             case Address:
                 choices = new ArrayList<>();
-                if (address == null) {
-                    choices.add("Use default address");
-                    choices.add("Use new address");
-                } else {
-                    choices.add("Unset address");
-                    choices.add("Next");
-                }
+                choices.add("Use default address");
                 choices.add("Back");
 
                 do {
@@ -88,26 +92,7 @@ public class OrderScene extends Scene {
                         break;
 
                     case "Use default address":
-                        address = SessionState.customerEmail;// .getAddress();
-                        // fix this when we have more concrete classes
-                        if (address == null) {
-                            address = "";
-                        }
-                        break;
-
-                    case "Use new address":
-                        System.out.println("Type new address: ");
-                        address = scanner.nextLine();
-                        if (address.length() == 0) {
-                            address = null;
-                        }
-                        break;
-
-                    case "Unset address":
-                        address = null;
-                        break;
-
-                    case "Next":
+                        address = SessionState.user.getAddress();
                         state = State.Date;
                         selectedChoice = null;
                         break;
@@ -148,12 +133,7 @@ public class OrderScene extends Scene {
                         break;
 
                     case "Set date of delivery":
-                        // TODO: this has to be a date, parsed to a date
-                        // this also cannot be 30 days beyond the current date,
-                        // maybe just set this as "Delivery date (days from now)"
-                        // and create this Date when about to process the database action?
-                        
-                        System.out.println("Type delivery date: ");
+                        System.out.println("Type delivery date (MM/DD/YYYY): ");
                         deliveryDate = scanner.nextLine();
                         if (deliveryDate.length() == 0) {
                             deliveryDate = null;
@@ -222,10 +202,13 @@ public class OrderScene extends Scene {
 
             case Payment: 
 
+                float payment = (float)SessionState.ongoingOrder.getItems().stream().mapToDouble(FoodItem::getPrice).sum();
+
+                System.out.println("The total payment will be: " + payment);
                 choices = new ArrayList<>();
-                if (paymentInfo == null) {
-                    choices.add("Use default payment");
-                    choices.add("Use new payment information");
+                if (paymentMethod == null) {
+                    choices.add("Use Card");
+                    choices.add("Use Cash");
                 } else {
                     choices.add("Unset payment");
                     choices.add("Finish");
@@ -250,25 +233,18 @@ public class OrderScene extends Scene {
                         requestTransition = true;
                         break;
 
-                    case "Use default payment":
-                        paymentInfo = SessionState.customerEmail;// .getPaymentInfo();
-                        // fix this when we have more concrete classes
-                        if (paymentInfo == null) {
-                            paymentInfo = "";
-                        }
+                    case "Use Card":
+                        paymentMethod = "Card";
                         selectedChoice = null;
                         break;
 
-                    case "Use new payment information":
-                        System.out.println("Type new payment information: ");
-                        paymentInfo = scanner.nextLine();
-                        if (paymentInfo.length() == 0) {
-                            paymentInfo = null;
-                        }
+                    case "Use Cash":
+                        paymentMethod = "Cash";
+                        selectedChoice = null;
                         break;
 
                     case "Unset payment":
-                        paymentInfo = null;
+                        paymentMethod = null;
                         break;
 
                     case "Finish":
