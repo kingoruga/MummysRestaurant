@@ -6,6 +6,9 @@
 package view;
 
 
+import model.Address;
+import model.Orders;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,11 +25,11 @@ public class OrderScene extends Scene {
     private State state;
 
     // Both of these fields would be more complex classes later on
-    private String address;
+    private Address address;
     private String paymentInfo;
     private String deliveryDate;
     private int deliveryTime;
-    private Order order;
+    private Orders order;
     private boolean purchasing;
 
     public OrderScene() {
@@ -42,9 +45,9 @@ public class OrderScene extends Scene {
                 return new FoodScene();
 
             case "Finish":
-                order.setDeliveryAddress(address);
+                order.setOrderAddress(address);
                 order.setDeliveryDate(deliveryDate);
-                order.setDeliveryTime(deliveryTime);
+                // order.setDeliveryTime(deliveryTime);
                 //DatabaseAction.addOrder(SessionState.customer, order);
                 return new HomeScene();
         }
@@ -60,13 +63,7 @@ public class OrderScene extends Scene {
         switch (state) {
             case Address:
                 choices = new ArrayList<>();
-                if (address == null) {
-                    choices.add("Use default address");
-                    choices.add("Use new address");
-                } else {
-                    choices.add("Unset address");
-                    choices.add("Next");
-                }
+                choices.add("Use default address");
                 choices.add("Back");
 
                 do {
@@ -88,26 +85,7 @@ public class OrderScene extends Scene {
                         break;
 
                     case "Use default address":
-                        address = SessionState.customerEmail;// .getAddress();
-                        // fix this when we have more concrete classes
-                        if (address == null) {
-                            address = "";
-                        }
-                        break;
-
-                    case "Use new address":
-                        System.out.println("Type new address: ");
-                        address = scanner.nextLine();
-                        if (address.length() == 0) {
-                            address = null;
-                        }
-                        break;
-
-                    case "Unset address":
-                        address = null;
-                        break;
-
-                    case "Next":
+                        address = SessionState.user.getAddress();
                         state = State.Date;
                         selectedChoice = null;
                         break;
@@ -251,7 +229,7 @@ public class OrderScene extends Scene {
                         break;
 
                     case "Use default payment":
-                        paymentInfo = SessionState.customerEmail;// .getPaymentInfo();
+                        paymentInfo = ""; //SessionState.customerEmail;// .getPaymentInfo();
                         // fix this when we have more concrete classes
                         if (paymentInfo == null) {
                             paymentInfo = "";

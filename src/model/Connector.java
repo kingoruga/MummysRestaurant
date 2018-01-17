@@ -7,6 +7,8 @@ package model;
 
 import controller.MenuController;
 import controller.UserController;
+
+import java.nio.ByteBuffer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -137,7 +139,7 @@ public class Connector {
         String pw = "";
         String status = "";
         try (PreparedStatement pstmt = conn.prepareStatement("Select user_id, first_name, last_name, is_admin, password, "
-                + ", address_id, status from online_user where email=?")) {
+                + " address_id, status from online_user where email=?")) {
             pstmt.setString(1, email);
             pstmt.executeQuery();
             ResultSet rs = pstmt.getResultSet();
@@ -517,48 +519,72 @@ public class Connector {
     }
     
     
-    public void getFoodQuery(FoodItem item) {  
+    public void getFoodQuery(FoodItem item) {
         try{
             DateFormat output = new SimpleDateFormat("dd-MMM-yy");
             DateFormat input = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date date; 
-            PreparedStatement pstmt = conn.prepareStatement("Select description, price, type, is_veg from food_item where name=?"); 
+            Date date;
+            PreparedStatement pstmt = conn.prepareStatement("Select description, price, type, is_veg from food_item where name=?");
             pstmt.setString(1, item.getName());
             ResultSet rs = pstmt.executeQuery();
-            if(rs.next()){ 
+            if(rs.next()){
                 item.setDescription(rs.getString(1));
                 item.setPrice(rs.getFloat(2));
                 item.setType(rs.getString(3));
-                item.setVeg(rs.getString(4));
+                item.setIsVeg(rs.getString(4).equalsIgnoreCase("yes"));
                 pstmt = conn.prepareStatement("Select zip_code,time,begin_date,end_date from Availability where food_item_id=(Select food_item_id from food_item where name=?)");
                 pstmt.setString(1, item.getName());
                 rs = pstmt.executeQuery();
                 while(rs.next()) {
                     Availability loc = new Availability();
-                    loc.setZip(rs.getInt(1)); 
+                    loc.setZip(rs.getInt(1));
                     loc.setMeal(rs.getString(2));
                     date = input.parse(rs.getString(3));
                     loc.setStart_date(output.format(date));
                     date = input.parse(rs.getString(4));
                     loc.setEnd_date(output.format(date));
-                    item.addAvailability(loc);
+                    // item.addAvailability(loc);
                 }
             }
         }catch(Exception ex) {
             Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-    public void createFoodQuery(FoodItem item) {  
+
+    public List<Availability> getAvailabilities(FoodItem item) {
+        List<Availability> availabilities = new ArrayList<>();
         try {
-            ArrayList<Availability> loc = item.getAvailability();
+
+            PreparedStatement statement = conn.prepareStatement("" +
+                    "select a.* from AVAILABILITY a, FOOD_ITEM f where f.FOOD_ITEM_ID = ?");
+            statement.setInt(1, ByteBuffer.wrap(item.getFoodItemId()).getShort());
+
+            ResultSet rs = statement.executeQuery();
+            DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            while (rs.next()){
+                Availability a = new Availability();
+                a.setZip(rs.getInt("zip_code"));
+                a.setStart_date(df.format(rs.getDate("begin_date")));
+                a.setEnd_date(df.format(rs.getDate("end_date")));
+                a.setMeal(rs.getString("time"));
+            }
+        }catch(SQLException ex) {
+            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return availabilities;
+    }
+    
+    
+    public void createFoodQuery(FoodItem item) {
+        try {
+            List<Availability> loc = getAvailabilities(item);
             PreparedStatement pstmt = conn.prepareStatement("Insert into Food_item (name,description,price,type,is_veg) values(?,?,?,?,?)");
             pstmt.setString(1, item.getName());
             pstmt.setString(2,item.getDescription());
             pstmt.setString(3, Float.toString(item.getPrice()));
             pstmt.setString(4, item.getType());
-            pstmt.setString(5, item.getVeg());
+            pstmt.setString(5, item.getIsVeg() ? "Yes" : "No");
             pstmt.executeUpdate();
             //Insert into availability table for each zip code using fooditemid from above insert
             pstmt = conn.prepareStatement("Insert into Availability (food_item_id,zip_code,time,begin_date,end_date) values ((select food_item_id from food_item where name=?),?,?,?,?)");
@@ -572,19 +598,19 @@ public class Connector {
                 pstmt.executeUpdate();
             }
         }catch(SQLException ex) {
-            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex); 
+            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
        
     
-    public void removeFoodQuery(String name) { 
+    public void removeFoodQuery(String name) {
         try {
             PreparedStatement pstmt = conn.prepareStatement("Delete from Food_item where name=?");
             pstmt.setString(1, name);
             pstmt.executeQuery();
         }catch(SQLException ex) {
-            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex); 
-        }  
+            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     

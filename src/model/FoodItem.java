@@ -19,6 +19,8 @@ public class FoodItem {
     private String Image;
     private int Availability;
 
+    public FoodItem() {}
+
     public FoodItem(byte[] id, String name, String description, float price, String type, boolean veg, String image, int availability){
         this.FoodItemId = id;
         this.Name = name;
