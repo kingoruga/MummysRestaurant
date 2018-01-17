@@ -18,14 +18,14 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import controller.PackageController; 
 import model.Availability; 
-import model.FoodItem;
+import model.Fooditem;
 
 
 
 
 public class PackageManagementScene extends Scene {
 	
-	private FoodItem fItem;
+	private Fooditem fItem;
 	private Availability loc;
 	private String userInput;
 	private String name;
@@ -40,7 +40,7 @@ public class PackageManagementScene extends Scene {
 	public Scene transitionNext() {
 		
 		controller = new PackageController();
-		fItem = new FoodItem();
+		fItem = new Fooditem();
 		
 		
 		switch(selectedChoice) {
