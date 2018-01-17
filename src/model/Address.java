@@ -1,7 +1,9 @@
-package controller;
+
+package model;
+
 
 public class Address {
-    private int AddressId;
+    private byte[] AddressId;
     private String Street1;
     private String Street2;
     private String City;
@@ -9,11 +11,11 @@ public class Address {
     private String Zip;
     private boolean IsDeliverable;
 
-    public int getAddressId() {
+    public byte[] getAddressId() {
         return AddressId;
     }
 
-    public void setAddressId(int AddressId) {
+    public void setAddressId(byte[] AddressId) {
         this.AddressId = AddressId;
     }
 
@@ -64,6 +66,6 @@ public class Address {
     public void setIsDeliverable(boolean IsDeliverable) {
         this.IsDeliverable = IsDeliverable;
     }
-    
+
 }
 

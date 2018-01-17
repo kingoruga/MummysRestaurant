@@ -4,86 +4,103 @@
  * and open the template in the editor.
  */
 package model;
-import java.util.*;
 
 /**
  *
  * @author syntel
  */
 public class FoodItem {
-    private int foodItemId;
-    private String name;
-    private String description;
-    private float price;
-    private String type;
-    private String isVeg;
-    private String image;
-    private ArrayList<Availability> availability = new ArrayList<Availability>();
+   private byte[] FoodItemId;
+    private String Name;
+    private String Description;
+    private float Price;
+    private String Type;
+    private boolean IsVeg;
+    private String Image;
+    private int Availability;
 
+    public FoodItem(byte[] id, String name, String description, float price, String type, boolean veg, String image, int availability){
+        this.FoodItemId = id;
+        this.Name = name;
+        this.Description = description;
+        this.Price = price;
+        this.Type = type;
+        this.IsVeg = veg;
+        this.Image = image;
+        this.Availability = availability;
+    }
     
-	public int getFoodItemId() {
-		return foodItemId;
-	}
-	public void setFoodItemId(int foodItemId) {
-		this.foodItemId = foodItemId;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	public float getPrice() {
-		return price;
-	}
-	public void setPrice(float price) {
-		this.price = price;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
-	public String getVeg() {
-		return isVeg;
-	}
-	public void setVeg(String isVeg) {
-		this.isVeg = isVeg;
-	}
-	public String getImage() {
-		return image;
-	}
-	public void setImage(String image) {
-		this.image = image;
-	}
+    public byte[] getFoodItemId() {
+        return FoodItemId;
+    }
 
-	public ArrayList<Availability> getAvailability(){
-		return availability;
-	}
-	
-	public void addAvailability(Availability a) {
-		
-		availability.add(a);
-	}
-	@Override
-	public String toString() {
-		return "FoodItem [foodItemId=" + foodItemId + ", name=" + name + ", description=" + description + ", price="
-				+ price + ", type=" + type + ", isVeg=" + isVeg + ", image=" + image + ", availability=" + availability
-				+ "]";
-	}
-	
-	
-    
-    
-    
+    public void setFoodItemId(byte[] FoodItemId) {
+        this.FoodItemId = FoodItemId;
+    }
 
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String Name) {
+        this.Name = Name;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public void setDescription(String Description) {
+        this.Description = Description;
+    }
+
+    public float getPrice() {
+        return Price;
+    }
+
+    public void setPrice(float Price) {
+        this.Price = Price;
+    }
+
+    public String getType() {
+        return Type;
+    }
+
+    public void setType(String Type) {
+        this.Type = Type;
+    }
+
+    public boolean getIsVeg() {
+        return IsVeg;
+    }
+
+    public void setIsVeg(boolean IsVeg) {
+        this.IsVeg = IsVeg;
+    }
+
+    public String getImage() {
+        return Image;
+    }
+
+    public void setImage(String Image) {
+        this.Image = Image;
+    }
     
+    public int getAvailability(){
+        return Availability;
+    }
     
+    public void setAvailability(int Availability){
+        this.Availability = Availability;
+    }
+    
+    public String toString()
+    {
+        StringBuilder toReturn = new StringBuilder();
+        toReturn.append( Name );
+        toReturn.append( "\t" );
+        toReturn.append( Description );
+        return toReturn.toString();
+    }
+
 }

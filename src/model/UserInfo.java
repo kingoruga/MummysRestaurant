@@ -38,10 +38,10 @@ public class UserInfo {
         user.changePasswordQuery(email, password);
     }
 
-    public String loginUser(String email, String password) {
-         user = new Connector();
-         return user.loginQuery(email, password);
-    }
+    /*public String loginUser(String email, String password) {
+    user = new Connector();
+    return user.loginQuery(email, password);
+    }*/
 
     public void registerNewUser(String fname, String lname, String email, String passWrd, String strAddress, String city, String state, int zipCode) {
        user = new Connector();

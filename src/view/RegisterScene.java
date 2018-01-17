@@ -1,7 +1,9 @@
 package view;
 
+
 import java.util.ArrayList;
 import java.util.List;
+import static view.SessionState.user;
 
 public class RegisterScene extends Scene {
 
@@ -28,7 +30,7 @@ public class RegisterScene extends Scene {
             }
             
             // log them in after success
-            SessionState.customerEmail = email;
+            SessionState.user = user;
         }
 
         return new HomeScene();

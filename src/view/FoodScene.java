@@ -1,8 +1,10 @@
 package view;
 
 //import com.syntel.DatabaseAction;
-import controller.Order;
+
+
 import model.FoodItem;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +21,7 @@ public class FoodScene extends Scene {
     }
     
     private List<FoodItem> retrievedFoods;
-    private List<FoodItem> addedItems;
+    private ArrayList<FoodItem> addedItems;
     private List<Package> todaysSpecials;
     private State state;
 
@@ -40,8 +42,8 @@ public class FoodScene extends Scene {
                 
             case "Order":
                 // Move items to session, go to next state
-                SessionState.ongoingOrder = new Order();
-                SessionState.ongoingOrder.setFood(addedItems);
+                //SessionState.ongoingOrder = new Orders();
+                SessionState.ongoingOrder.setItems(addedItems);
                 return new OrderScene();
         }
 

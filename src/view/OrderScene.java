@@ -5,8 +5,7 @@
  */
 package view;
 
-//import com.syntel.DatabaseAction;
-import controller.Order;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -221,7 +220,7 @@ public class OrderScene extends Scene {
                 }
                 break;
 
-            case Payment:
+            case Payment: 
 
                 choices = new ArrayList<>();
                 if (paymentInfo == null) {
