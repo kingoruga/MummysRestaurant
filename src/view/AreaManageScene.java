@@ -19,7 +19,7 @@ public class AreaManageScene extends Scene {
     public Scene transitionNext() {
         return new HomeScene();
     }
-
+    
     @Override
     public void process() {
         // Create choices
@@ -51,7 +51,7 @@ public class AreaManageScene extends Scene {
             case "Remove Area":
                 promptRemoveArea();
                 break;
-            case "View Package Availability":
+            case "Edit Package Availability":
                 promptPackageAvailability();
                 break;
             case "Back":
@@ -82,7 +82,7 @@ public class AreaManageScene extends Scene {
         String zip = scanner.nextLine();
         //TODO: need to put together when Database functionality in place
         if (!amc.removeArea(zip)){
-            System.out.print("Unable to remove area. Current Orders Exist");
+            System.out.println("Unable to remove area. Current Orders Exist");
         };
         //System.out.println( "TODO: need remove functionality" );
     }
@@ -113,9 +113,59 @@ public class AreaManageScene extends Scene {
         for(int i = 0;i<packages.size();i++){
             System.out.println(packages.get(i));
         }
-        
+        selectedChoice = null;
+        List<String> choices = new ArrayList<>();
+        choices.add( "Add a Package" );
+        choices.add( "Remove a Package" );
+        choices.add( "Back" );
+        System.out.println("Please pick an option:");
+        do {
+            // Display all choices
+            for (int i = 0; i < choices.size(); i++)
+                System.out.println("(" + i + ")" + " " + choices.get(i));
+
+            // Match user input with choice
+            selectedChoice = matchInputWithChoice(scanner.nextLine(), choices);
+
+        } while (selectedChoice == null);
+        switch ( selectedChoice )
+        {
+            case "Add a Package":
+                addPackagetoArea(amc,zip);
+                break;
+            case "Remove a Package":
+                removePackageFromArea(amc,zip);
+                break;
+            case "Back":
+                break;
+            default:
+                //TODO: throw exception because choice is invalid
+                System.out.println( "Invalid choice: " + selectedChoice );
+                break;
+        }
         //TODO: put together when database has functionality
         //System.out.println( "TODO: need package availability functionality" );
     }
+    
+    public void addPackagetoArea(AreaManagementController amc, String zip){
+        System.out.print( "Enter package number: " );
+        String packageNo = scanner.nextLine();
+        if (!amc.addPackagetoArea(zip,packageNo)){
+            System.out.println("Unable to add "+packageNo+" from "+zip);
+        }
+        else{
+            System.out.println("Successfully Added "+packageNo+" to "+zip);
+        }
+    }
+    
+    public void removePackageFromArea(AreaManagementController amc,String zip){
+        System.out.print( "Enter package number: " );
+        String packageNo = scanner.nextLine();
+        if (!amc.removePackageFromArea(zip,packageNo)){
+            System.out.println("Unable to remove "+packageNo+" from "+zip);
+        }
+        else{
+            System.out.println("Successfully Removed "+packageNo+" to "+zip);
+        }
+    }
 }
-

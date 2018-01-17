@@ -179,14 +179,14 @@ public class Connector {
             int count = pstmt.executeUpdate();
 
             if (count == 1) {
-                String admin = "No";
+                int admin = 1;
                 String status = "Enabled";
                 PreparedStatement pstmt1 = conn.prepareStatement
                   ("Insert into ONLINE_USER (first_name, last_name, is_admin, password, email, address_id, status ) "
                           + "values (?,?,?,?,?,(Select address_id from address where street=? and zip_code=?),?)"); //password will be encrypted in web app
                 pstmt1.setString(1, fname);
                 pstmt1.setString(2, lname);
-                pstmt1.setString(3, admin);
+                pstmt1.setInt(3, admin);
                 pstmt1.setString(4, passWrd);
                 pstmt1.setString(5, email);                
                 pstmt1.setString(6, strAddress);
@@ -198,8 +198,7 @@ public class Connector {
                     return true;
             }
         } catch (SQLException ex) {
-            ex.getMessage();
-            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Unable to Register");
         }
         return false;
     }
@@ -249,11 +248,11 @@ public class Connector {
     public List getFoodItemsInArea(String zip){
         List<String> foodInArea = new ArrayList();
         try{
-            PreparedStatement pstmt = conn.prepareStatement("select name || ' - ' || description as Food_Item from food_item fi join availability a on fi.availability_id = a.availability_id join service_areas se on a.zip_code = se.zip_code where se.zip_code = ?");
+            PreparedStatement pstmt = conn.prepareStatement("select fi.food_item_id,name || ' - ' || description as Food_Item from food_item fi join availability a on fi.food_item_id = a.food_item_id join service_areas se on a.zip_code = se.zip_code where se.zip_code = ?");
             pstmt.setInt(1, Integer.parseInt(zip));
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()){
-                foodInArea.add(rs.getString(1));
+                foodInArea.add(rs.getString(1)+" "+rs.getString(2));
             }
         }catch(SQLException ex){
             System.out.println("Unable to get food in "+zip);
@@ -469,6 +468,49 @@ public class Connector {
     }
 
 
+
+    public boolean addPackagetoArea(String zip,String packageNo){
+       try{
+           PreparedStatement pstmt = conn.prepareStatement("Insert into Availability (food_item_id,zip_code) values (?,?)");
+           pstmt.setString(1,packageNo);
+           pstmt.setString(2,zip);
+           int count = pstmt.executeUpdate();
+           if (count == 1)
+               return true;
+       }catch(SQLException ex){
+           return false;
+       }
+       return false;
+   }
+   
+    public boolean removePackageFromArea(String zip,String packageNo){
+       try{
+           PreparedStatement pstmt = conn.prepareStatement("Delete from Availability where zip_code = ? and food_item_id = ?");
+           pstmt.setString(2,packageNo);
+           pstmt.setString(1,zip);
+           int count = pstmt.executeUpdate();
+           if (count == 1)
+               return true;
+       }catch(SQLException ex){
+           return false;
+       }
+       return false;
+   }
+
     
+    public boolean getAdmin(String email){
+       try{
+           PreparedStatement pstmt = conn.prepareStatement("select is_admin from online_user where email=?");
+           pstmt.setString(1,email);
+           ResultSet rs = pstmt.executeQuery();
+           while (rs.next()){
+               if(rs.getInt(1) == 1)
+                    return true;
+           }
+       }catch(SQLException ex){
+           return false;
+       }
+       return false;
+    }
    
 }

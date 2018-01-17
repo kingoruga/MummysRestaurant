@@ -1,9 +1,6 @@
 package model;
 
-import com.syntel.Models.FoodItem;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class Orders {
     private byte[] OrderId;
