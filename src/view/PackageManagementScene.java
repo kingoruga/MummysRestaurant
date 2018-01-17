@@ -1,12 +1,27 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+
+/**
+ *
+ * @author syntel
+ */
+
+
 package view;
 
-
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
-
-import com.syntel.*;
-import controller.PackageController;
-import model.Availability;
+import controller.PackageController; 
+import model.Availability; 
 import model.FoodItem;
+
+
+
 
 public class PackageManagementScene extends Scene {
 	
@@ -33,13 +48,30 @@ public class PackageManagementScene extends Scene {
 			//collect new food item fields from user
 			case "Create New Food Item":				
 				
-				System.out.println("Enter Name: ");
-				userInput = scanner.nextLine();
-				fItem.setName(userInput);
+                                valid=false;
+                                while(!valid){                                    
+                                    System.out.println("Enter Name: ");
+                                    userInput = scanner.nextLine();
+                                    if(userInput.length() <= 10){
+                                        fItem.setName(userInput);
+                                        valid=true;
+                                    }else{
+                                        System.out.println("Name to Long!");
+                                    }                         
+                                }
 				
-				System.out.println("Enter Description: ");
-				userInput = scanner.nextLine();
-				fItem.setDescription(userInput);
+                                valid=false;
+                                while(!valid){
+                                    System.out.println("Enter Description: ");
+                                    userInput = scanner.nextLine();
+                                    if(userInput.length()<=60){
+                                        fItem.setDescription(userInput);
+                                        valid=true;
+                                    }else{
+                                        System.out.println("description to long!");
+                                    }
+                                }
+                                    
 				
 				valid = false;
 				while(!valid) {
@@ -54,18 +86,27 @@ public class PackageManagementScene extends Scene {
 						scanner.nextLine();
 					}
 				}
+                                
+				valid=false;
+                                while(!valid){
+                                    System.out.println("Enter Type: ");
+                                    userInput = scanner.nextLine();
+                                    if(userInput.length() <= 8){
+                                        fItem.setType(userInput);
+                                        valid=true;
+                                    }else{
+                                        
+                                        System.out.println("Type to long!");
+                                    }                                   
+                                }
 				
-				
-				System.out.println("Enter Type: ");
-				userInput = scanner.nextLine();
-				fItem.setType(userInput);
-				
+								
 				valid = false;
 				while(!valid) {
 					System.out.println("Vegetarian? (yes/no): ");
 					userInput = scanner.nextLine();
 					if(userInput.toUpperCase().equals("YES") || userInput.toUpperCase().equals("NO")) {
-						fItem.setVeg(userInput);
+						fItem.setIsVeg(userInput.equalsIgnoreCase("yes"));
 						valid = true;
 					}else {
 						System.out.println("Invalid Input");
@@ -77,12 +118,9 @@ public class PackageManagementScene extends Scene {
 				userInput = scanner.nextLine();
 				fItem.setImage(userInput);
 				
-				createLocation();
-				
-				//Add location values
-				
-				
-				controller.createNewItem(fItem);				
+				createLocation(); //Add location values				
+							
+				controller.createNewItem(fItem);//add new item to database				
 				
 				System.out.println("Created: "+fItem);
 				
@@ -93,6 +131,11 @@ public class PackageManagementScene extends Scene {
 				name=scanner.nextLine();
 				fItem.setName(name);
 				controller.getFoodItem(fItem);	
+                                
+                                if(fItem.getDescription() == null){
+                                    System.out.println(name+" Doesnt Exist!");
+                                    break;
+                                }
 				
 				System.out.println("Retrieved Food Item: "+fItem);
 				
@@ -155,14 +198,33 @@ public class PackageManagementScene extends Scene {
 			switch(selectedChoice) {
 				
 				case "Name":
-					System.out.print("Enter New Name: ");
-					fItem.setName(scanner.nextLine());
-					break;
+                                        valid=false;
+                                        while(!valid){                                            
+                                            System.out.print("Enter New Name: ");
+                                            String name = scanner.nextLine();
+                                            if(name.length()<=10){
+                                                fItem.setName(scanner.nextLine());
+                                                valid=true;
+                                            }else{
+                                                System.out.println("Name to Long!");
+                                            }
+                                        }
+                                        break;
 				
 				case "Description":
-					System.out.print("Enter New Description: ");
-					fItem.setDescription(scanner.nextLine());
-					break;
+                                    
+                                    valid=false;
+                                    while(!valid){
+                                        System.out.println("Enter Description: ");
+                                         userInput = scanner.nextLine();
+                                        if(userInput.length()<=60){
+                                            fItem.setDescription(userInput);
+                                            valid=true;
+                                        }else{
+                                            System.out.println("description to long!");
+                                        }
+                                    }
+                                    break;
 					
 				case "Price":
 					
@@ -183,16 +245,28 @@ public class PackageManagementScene extends Scene {
 					
 					
 				case "Type":
-					System.out.print("Enter New Type: ");
-					fItem.setType(scanner.nextLine());
+                                        valid=false;
+					while(!valid) {
+						System.out.print("Enter New Type: ");
+						userInput = scanner.nextLine();
+						if(userInput.length()<=8) {
+							fItem.setType(userInput);
+							valid = true;
+						}else {
+							System.out.println("Type to long!");
+						}
+                                        }
+                                    
+					
 					break;
 					
 				case "Veg (yes/no":
+                                        valid=false;
 					while(!valid) {
 						System.out.println("Vegetarian? (yes/no): ");
 						userInput = scanner.nextLine();
 						if(userInput.toUpperCase().equals("YES") || userInput.toUpperCase().equals("NO")) {
-							fItem.setVeg(userInput);
+							fItem.setIsVeg(userInput.equalsIgnoreCase("yes"));
 							valid = true;
 						}else {
 							System.out.println("Invalid Input");
@@ -203,7 +277,7 @@ public class PackageManagementScene extends Scene {
 					
 				case "Availability Info":
 					
-					ArrayList<Availability> locs = fItem.getAvailability();
+					List<Availability> locs = connector.getAvailabilities(fItem);
 					zips.clear();
 					for(int i=0;i<locs.size();i++) {
 						zips.add(Integer.toString(locs.get(i).getZip()));
@@ -240,7 +314,9 @@ public class PackageManagementScene extends Scene {
 	public void createLocation() {
 		
 		validChoices = new ArrayList<String>();
+                ArrayList<String> validMonths = new ArrayList<String>();               
 		
+                
 		boolean addingLoc = true;				
 		while(addingLoc) {
 			loc = new Availability();
@@ -272,14 +348,37 @@ public class PackageManagementScene extends Scene {
 					System.out.println("Invalid Input");
 				}						
 			}
-			
-			System.out.println("Start Date: ");
-			userInput = scanner.nextLine();
-			loc.setStart_date(userInput);
-			
-			System.out.println("End Date: ");
-			userInput = scanner.nextLine();
-			loc.setEnd_date(userInput);		
+                        valid =false;
+			while(!valid){
+                            try{                                
+                                SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yy");
+                                System.out.println("Start Date: ");
+                                userInput = scanner.nextLine();
+                                format.parse(userInput);
+                                loc.setStart_date(userInput);
+                                valid=true;
+                            }catch(Exception e){
+                                System.out.println("Invalid date format!");
+                            }
+                        }
+                        
+                            
+                            
+                        valid =false;
+			while(!valid){
+                            try{                                
+                                SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yy");
+                                System.out.println("End Date: ");
+                                userInput = scanner.nextLine();
+                                format.parse(userInput);
+                                loc.setEnd_date(userInput);
+                                valid=true;
+                            }catch(Exception e){
+                                System.out.println("Invalid date format!");
+                            }
+                        }             
+                        
+                        	
 			
 			valid = false;
 			while(!valid) {
@@ -296,8 +395,9 @@ public class PackageManagementScene extends Scene {
 				}
 				
 			}					
-			
-			fItem.addAvailability(loc);
+
+
+			// fItem.addAvailability(loc);
 		
 		}
 		
@@ -307,7 +407,7 @@ public class PackageManagementScene extends Scene {
 		validChoices = new ArrayList<String>();
 		
 		List<String> locChoices = new ArrayList<>();
-		ArrayList<Availability> locs = fItem.getAvailability();
+		List<Availability> locs = connector.getAvailabilities(fItem);
 		
 		locChoices.add("Zip");
 		locChoices.add("Meal Time (Breakfast/Lunch/Dinner)");		
@@ -361,14 +461,40 @@ public class PackageManagementScene extends Scene {
 				break;
 				
 			case "Start Date":
-				System.out.print("Enter New Start Date: ");
-				locs.get(index).setStart_date(scanner.nextLine());
-				break;
+                            
+                            valid =false;
+                            while(!valid){
+                                try{                                
+                                    SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yy");
+                                    System.out.println("Enter New Start Date: ");
+                                    userInput = scanner.nextLine();
+                                    format.parse(userInput);
+                                    locs.get(index).setStart_date(userInput);
+                                    valid=true;
+                                }catch(Exception e){
+                                    System.out.println("Invalid date format!");
+                                }
+                            }
+                            break;
+				
 				
 			case "End Date":
-				System.out.print("Enter New End Date: ");
-				locs.get(index).setEnd_date(scanner.nextLine());
-				break;
+                            
+                            valid =false;
+                            while(!valid){
+                                try{                                
+                                    SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yy");
+                                    System.out.println("Enter New End Date: ");
+                                    userInput = scanner.nextLine();
+                                    format.parse(userInput);
+                                    locs.get(index).setEnd_date(userInput);
+                                    valid=true;
+                                }catch(Exception e){
+                                    System.out.println("Invalid date format!");
+                                }
+                            }
+                            break;
+                            
 		}
 		
 	}
@@ -404,3 +530,4 @@ public class PackageManagementScene extends Scene {
 	
 
 }
+

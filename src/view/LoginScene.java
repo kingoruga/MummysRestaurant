@@ -15,11 +15,11 @@ public class LoginScene extends Scene {
         if (!loggingIn)
             return new HomeScene();
 
-        SessionState.customerEmail = connector.loginQuery(email, password);
+        SessionState.user = connector.loginQuery(email, password);
         
         if (connector.userIsDisabledQuery(email)) {
             System.out.println("This account is disabled.");
-            SessionState.customerEmail = null;
+            SessionState.user = null;
         }
         
         else if (!SessionState.loggedIn()) {

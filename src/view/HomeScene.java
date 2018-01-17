@@ -10,7 +10,7 @@ public class HomeScene extends Scene {
 
     public HomeScene() {
         loggedIn = SessionState.loggedIn();
-        admin = loggedIn && connector.getAdmin(SessionState.customerEmail);
+        admin = loggedIn && SessionState.user.getIsAdmin();
     }
 
     @Override
@@ -25,7 +25,7 @@ public class HomeScene extends Scene {
                 return new RegisterScene();
 
             case "Logout":
-                SessionState.customerEmail = null;
+                SessionState.user = null;
                 return new HomeScene();
 
             case "View available foods":
@@ -40,14 +40,15 @@ public class HomeScene extends Scene {
             case "Area management":
                 return new AreaManageScene();
 
-            case "Todays management":
-                break;
+           // case "Todays management":
+           //     break;
                 
             case "Package management":
                 return new PackageManagementScene();
 
             case "Order management":
-                break;
+                return new OrderManageScene();
+                
         }
 
         return new HomeScene();
@@ -68,7 +69,7 @@ public class HomeScene extends Scene {
         }
         
         if (admin) {
-            choices.add("Todays management");
+            //choices.add("Todays management");
             choices.add("User management");
             choices.add("Area management");
             choices.add("Package management");

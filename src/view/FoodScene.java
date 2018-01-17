@@ -1,8 +1,11 @@
 package view;
 
 //import com.syntel.DatabaseAction;
-import controller.Order;
+
+
 import model.FoodItem;
+import model.Orders;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +22,13 @@ public class FoodScene extends Scene {
     }
     
     private List<FoodItem> retrievedFoods;
-    private List<FoodItem> addedItems;
+    private ArrayList<FoodItem> addedItems;
     private List<Package> todaysSpecials;
     private State state;
 
     FoodScene() {
         state = State.Options;
-        //retrievedFoods = DatabaseAction.getFood(SessionState.customer);
+        retrievedFoods = connector.foodAvailableFor(SessionState.user.getEmail());
         // mix todaysSpecial orders with retrievedFoods?
         //todaysSpecials = DatabaseAction.getTodaysSpecials();
         addedItems = new ArrayList<>();
@@ -40,8 +43,8 @@ public class FoodScene extends Scene {
                 
             case "Order":
                 // Move items to session, go to next state
-                SessionState.ongoingOrder = new Order();
-                SessionState.ongoingOrder.setFood(addedItems);
+                SessionState.ongoingOrder = new Orders();
+                SessionState.ongoingOrder.setItems(addedItems);
                 return new OrderScene();
         }
 
@@ -109,15 +112,22 @@ public class FoodScene extends Scene {
                 break;
 
             case AddFood:
-                System.out.println("Add a food: ");
 
-                for (int i = 0; i < retrievedFoods.size(); i++)
-                    System.out.println("(" + i + ")" + " " + retrievedFoods.get(i));
+                if (retrievedFoods.isEmpty()){
+                    System.out.println("There are no foods for your area.\n");
+                }
 
-                food = matchInputWithChoice(scanner.nextLine(), retrievedFoods);
+                else {
+                    System.out.println("Add a food: ");
 
-                if (food != null)
-                    addedItems.add(food);
+                    for (int i = 0; i < retrievedFoods.size(); i++)
+                        System.out.println("(" + i + ")" + " " + retrievedFoods.get(i));
+
+                    food = matchInputWithChoice(scanner.nextLine(), retrievedFoods);
+
+                    if (food != null)
+                        addedItems.add(food);
+                }
 
                 state = State.Options;
                 break;
