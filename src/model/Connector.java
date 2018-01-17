@@ -193,11 +193,11 @@ public class Connector {
                 pstmt1.setString(2, lname);
                 pstmt1.setInt(3, admin);
                 pstmt1.setString(4, passWrd);
-                pstmt1.setString(5, email);                
+                pstmt1.setString(5, email);
                 pstmt1.setString(6, strAddress);
                 pstmt1.setInt(7, zipCode);
                 pstmt1.setString(8, status);
-  
+
                 count = pstmt1.executeUpdate();
                 if (count == 1)
                     return true;
@@ -207,7 +207,7 @@ public class Connector {
         }
         return false;
     }
-    
+
     public boolean addZipToServiceArea(String zip){
         try{
             PreparedStatement pstmt = conn.prepareStatement("insert into service_areas (zip_code) values (?)");
@@ -221,7 +221,7 @@ public class Connector {
         }
         return false;
     }
-    
+
     public boolean removeZipFromServiceArea(String zip){
         try{
             PreparedStatement pstmt = conn.prepareStatement("Delete from service_areas where zip_code = ?");
@@ -263,6 +263,54 @@ public class Connector {
             System.out.println("Unable to get food in "+zip);
         }
         return foodInArea;
+    }
+
+    public List<FoodItem> foodAvailableFor(String email) {
+
+        // get the users zipcode
+        int zipcode = 0;
+
+        try {
+            PreparedStatement pstmt
+                    = conn.prepareStatement("select a.zip_code "
+                    + "from online_user o, address a "
+                    + "where o.address_id = a.address_id "
+                    + "and o.email = ?");
+            pstmt.setString(1, email);
+            ResultSet result = pstmt.executeQuery();
+            while (result.next()) {
+                zipcode = result.getInt("zip_code");
+            }
+        } catch (SQLException se) {
+        }
+
+        // get the food
+        List<FoodItem> foods = new ArrayList<>();
+
+        try {
+            PreparedStatement pstmt
+                    = conn.prepareStatement("select f.food_item_id, f.name, f.description, f.price, f.type, f.is_veg "
+                    + "from food_item f, availability a "
+                    + "where f.FOOD_ITEM_ID = a.FOOD_ITEM_ID "
+                    + "and a.zip_code = ?");
+            pstmt.setInt(1, zipcode);
+            ResultSet result = pstmt.executeQuery();
+            while (result.next()) {
+                FoodItem food = new FoodItem();
+                int id = Integer.parseInt(result.getString("food_item_id"));
+                food.setFoodItemId(ByteBuffer.allocate(16).putInt(id).array());
+                food.setName(result.getString("name"));
+                food.setDescription(result.getString("description"));
+                food.setPrice(result.getFloat("price"));
+                food.setType(result.getString("type"));
+                food.setIsVeg(result.getString("is_veg").equalsIgnoreCase("yes"));
+                foods.add(food);
+            }
+
+        } catch (SQLException ex) {
+        }
+
+        return foods;
     }
 
    public void deleteMenuItem(String cmd) {

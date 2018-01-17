@@ -95,14 +95,11 @@ public class FoodItem {
     public void setAvailability(int Availability){
         this.Availability = Availability;
     }
-    
-    public String toString()
-    {
-        StringBuilder toReturn = new StringBuilder();
-        toReturn.append( Name );
-        toReturn.append( "\t" );
-        toReturn.append( Description );
-        return toReturn.toString();
+
+    @Override
+    public String toString() {
+        String veg = getIsVeg() ? "is" : "isnt";
+        return Name + " - " + "$" + Price + " - " + Type + " - " + veg + " veg" + "\n  " + Description;
     }
 
 }
