@@ -517,7 +517,7 @@ public class Connector {
     }
     
     
-    public void getFoodQuery(FoodItem item) {  
+    public void getFoodQuery(Fooditem item) {  
         try{
             DateFormat output = new SimpleDateFormat("dd-MMM-yy");
             DateFormat input = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -550,7 +550,7 @@ public class Connector {
     }
     
     
-    public void createFoodQuery(FoodItem item) {  
+    public void createFoodQuery(Fooditem item) {  
         try {
             ArrayList<Availability> loc = item.getAvailability();
             PreparedStatement pstmt = conn.prepareStatement("Insert into Food_item (name,description,price,type,is_veg) values(?,?,?,?,?)");
