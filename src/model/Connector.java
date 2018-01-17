@@ -15,13 +15,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.ParseException;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toMap;
 
 /**
  *
@@ -325,7 +327,7 @@ public class Connector {
             Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-   
+
    /*
         Returns the OnlineUser that corresponds to the id given.
     */
@@ -660,12 +662,78 @@ public class Connector {
             Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-    
-   
+
+    public void addOrder(Orders order, Address address, OnlineUser user) {
+        
+        DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+        Date orderDate = new Date();
+        Date deliveryDate;
+
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        try {
+            deliveryDate = df.parse(order.getDeliveryDate());
+        } catch (ParseException e) {
+            deliveryDate = new Date();
+        }
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(deliveryDate);
+        cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(order.getTime()));
+        Date deliveryTime = cal.getTime(); // returns new date object, one hour in the future
+
+        try {
+
+            // insert into orders
+
+            PreparedStatement pstmt = conn.prepareStatement("Insert into ORDERS "
+                    + "(user_id, address_id, payment_type, order_date, price, delivery_date, delivery_time) "
+                    + "values (?,?,?,?,?,?,?)");
+
+            pstmt.setBytes(1, user.getUserId());
+            pstmt.setBytes(2, address.getAddressId());
+            pstmt.setString(3, order.getPaymentMethod());
+            pstmt.setDate(4, new java.sql.Date(orderDate.getTime()));
+            pstmt.setDouble(5, order.getPrice());
+            pstmt.setDate(6, new java.sql.Date(deliveryDate.getTime()));
+            pstmt.setDate(7, new java.sql.Date(deliveryTime.getTime()));
+            int count = pstmt.executeUpdate();
+            if (count == 1) {
+                System.out.println("An order has been placed.");
+            }
+
+            // Add all to order_items
+            // create a food item -> count of food item map, not adding
+            // any duplicates based on their key id
+
+            Map<FoodItem, Integer> items = new HashMap<>();
+            Set<Integer> ids = new HashSet<>();
+            order.getItems().forEach(f -> {
+                int id = ByteBuffer.wrap(f.getFoodItemId()).getInt();
+                if (!ids.contains(id)) {
+                    items.put(f, 0);
+                    ids.add(id);
+                }
+                items.put(f, items.get(f) + 1);
+            });
+
+            for(Map.Entry<FoodItem, Integer> entry : items.entrySet()) {
+                pstmt = conn.prepareStatement("INSERT INTO " +
+                        "ORDER_ITEMS (order_id, food_item_id, quantity)" +
+                        "VALUES( (SELECT order_id FROM orders WHERE price=? AND order_date=? AND user_id=? and ROWNUM = 1), ?, ?)");
+
+                pstmt.setDouble(1, order.getPrice());
+                pstmt.setDate(2, new java.sql.Date(orderDate.getTime()));
+                pstmt.setBytes(3, user.getUserId());
+                pstmt.setInt(4, ByteBuffer.wrap(entry.getKey().getFoodItemId()).getInt());
+                pstmt.setInt(5, entry.getValue());
+                pstmt.executeUpdate();
+            }
+
+
+        } catch (Exception e) {
+            System.out.println("Order failed.");
+        }
+    }
+
 }
-
-
-
 

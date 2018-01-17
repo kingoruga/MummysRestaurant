@@ -22,6 +22,8 @@ public class Orders {
     public void setUser(OnlineUser user) {
         this.user = user;
     }
+
+    public Orders() {}
      
     public Orders(byte[] orderId, byte[] userId, byte[] addressId, String payment, String oDate, float price, String dDate, String dTime){
          this.OrderId = orderId;
