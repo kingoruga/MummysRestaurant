@@ -10,7 +10,7 @@ package model;
  * @author syntel
  */
 public class FoodItem {
-   private byte[] FoodItemId;
+   private int FoodItemId;
     private String Name;
     private String Description;
     private float Price;
@@ -34,7 +34,7 @@ public class FoodItem {
         return FoodItemId;
     }
 
-    public void setFoodItemId(byte[] FoodItemId) {
+    public void setFoodItemId(int FoodItemId) {
         this.FoodItemId = FoodItemId;
     }
 
@@ -103,3 +103,4 @@ public class FoodItem {
         return toReturn.toString();
     }
 }
+
