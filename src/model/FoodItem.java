@@ -5,6 +5,8 @@
  */
 package model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author syntel
@@ -17,9 +19,13 @@ public class FoodItem {
     private String Type;
     private boolean IsVeg;
     private String Image;
-    private int Availability;
+    private ArrayList<Availability> Availability;
+    
+    public FoodItem(){
+        
+    }
 
-    public FoodItem(int id, String name, String description, float price, String type, boolean veg, String image, int availability){
+    public FoodItem(int id, String name, String description, float price, String type, boolean veg, String image, ArrayList availability){
         this.FoodItemId = id;
         this.Name = name;
         this.Description = description;
@@ -86,12 +92,16 @@ public class FoodItem {
         this.Image = Image;
     }
     
-    public int getAvailability(){
+    public ArrayList<Availability> getAvailability(){
         return Availability;
     }
     
-    public void setAvailability(int Availability){
-        this.Availability = Availability;
+    public void createAvailability(ArrayList<Availability> a){
+        this.Availability = a;
+    }
+    
+    public void setAvailability(Availability a){
+        this.Availability.add(a);
     }
     
     public String toString()
