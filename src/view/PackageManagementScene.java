@@ -24,7 +24,7 @@ import model.FoodItem;
 
 public class PackageManagementScene extends Scene {
 	
-	private Fooditem fItem;
+	private FoodItem fItem;
 	private Availability loc;
 	private String userInput;
 	private String name;
@@ -39,7 +39,7 @@ public class PackageManagementScene extends Scene {
 	public Scene transitionNext() {
 		
 		controller = new PackageController();
-		fItem = new Fooditem();
+		fItem = new FoodItem();
 		
 		
 		switch(selectedChoice) {
