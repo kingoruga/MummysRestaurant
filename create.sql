@@ -70,7 +70,4 @@ Alter Table Orders ADD  CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES O
 Alter Table Orders ADD  CONSTRAINT order_address_id_fk FOREIGN KEY (address_id) REFERENCES Address (address_id) on delete cascade;
 Alter Table Online_User ADD  CONSTRAINT user_address_id_fk FOREIGN KEY (address_id) REFERENCES Address (address_id) on delete cascade;
 
-CREATE SEQUENCE user_seq START WITH 1000 INCREMENT BY 1;
-CREATE SEQUENCE order_seq START WITH 1000 INCREMENT BY 1;
-CREATE SEQUENCE address_seq START WITH 1000 INCREMENT BY 1;
-CREATE SEQUENCE food_item_seq START WITH 1000 INCREMENT BY 1;
+CREATE SEQUENCE main_seq START WITH 1000 INCREMENT BY 1;
