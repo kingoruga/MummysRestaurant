@@ -12,16 +12,8 @@ and open the template in the editor.
         <link rel="stylesheet" href="bootstrap.min.css" />
     </head>
     <body>
-        <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-dark">
-            <a class="navbar-brand" href="#">Mummy's Restaurant</a>
-            <a class="nav-link text-light" href="#">View Menu</a>
-            <a class="nav-link text-light" href="#">My Orders(0)</a>
-            <a class="nav-link text-light" href="#">Manage Users</a>
-            <a class="nav-link text-light" href="#">Manage Areas</a>
-            <a class="nav-link text-light" href="#">Manage Packages</a>
-            <a class="nav-link text-light" href="#">Manage Orders</a>
-            <a class="nav-link text-light" href="#">Logout</a>
-        </nav>
+        <div id="navContainer">
+        </div>
         <table class="table table-striped">
             <thead class="thead-dark">
                 <th>Order ID</th>
@@ -47,10 +39,87 @@ and open the template in the editor.
                 <td>25.99</td>
                 <td>Card</td>
             </tr>
-            
         </table>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="./js/react.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.29/browser.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reactstrap/4.8.0/reactstrap.min.js" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+        <script type="text/babel" >
+        /*
+         * TODO: need to pull this out into it's own js file
+         * NavBar class
+         * Properties:
+         * user,object containing information on the currently logged in user
+         *      pass as undefined if the user is not logged in
+         */
+        var NavBar = React.createClass({
+            renderAdminNav: function()
+            {
+                return (
+                <nav className="navbar sticky-top navbar-expand-lg navbar-light bg-dark">
+                    <a className="navbar-brand" href="#">Mummy's Restaurant</a>
+                    <a className="nav-link text-light" href="#">View Menu</a>
+                    <a className="nav-link text-light" href="#">My Orders(0)</a>
+                    <a className="nav-link text-light" href="#">Manage Users</a>
+                    <a className="nav-link text-light" href="#">Manage Areas</a>
+                    <a className="nav-link text-light" href="#">Manage Packages</a>
+                    <a className="nav-link text-light" href="#">Manage Orders</a>
+                    <a className="nav-link text-light" href="#">Logout</a>
+                </nav>
+                );
+            },
+            renderUserNav: function()
+            {
+                return (
+                <nav className="navbar sticky-top navbar-expand-lg navbar-light bg-dark">
+                    <a className="navbar-brand" href="#">Mummy's Restaurant</a>
+                    <a className="nav-link text-light" href="#">View Menu</a>
+                    <a className="nav-link text-light" href="#">My Orders(0)</a>
+                    <a className="nav-link text-light" href="#">Logout</a>
+                </nav>
+                );
+            },
+            renderVisitorNav: function()
+            {
+                return (
+                <nav className="navbar sticky-top navbar-expand-lg navbar-light bg-dark">
+                    <a className="navbar-brand" href="#">Mummy's Restaurant</a>
+                    <a className="nav-link text-light" href="#">View Menu</a>
+                    <a className="nav-link text-light" href="#">Login</a>
+                    <a className="nav-link text-light" href="#">Register</a>
+                </nav>
+                );
+            },
+            render: function()
+            {
+                //call a different function and return its return value depending
+                //  on whether the user is logged in/is an admin/just a visitor
+                if ( this.props.user && this.props.user.isAdmin )
+                {
+                    return this.renderAdminNav();
+                }
+                else if ( this.props.user )
+                {
+                    return this.renderUserNav();
+                }
+                else
+                {
+                    return this.renderVisitorNav();
+                }
+            }
+        });
+ 
+        //change the following to test out whether the navbar changes correctly
+        var testUser = {};
+        testUser.email = "tester@email.com";
+        testUser.isAdmin = true;
+        
+        React.render(
+                <NavBar user={testUser}/>, document.getElementById( "navContainer" )
+                );
+        </script>
     </body>
 </html>
