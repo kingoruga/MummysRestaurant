@@ -5,10 +5,9 @@
  */
 package model;
 
-import controller.MenuController;
+
 import controller.UserController;
 
-import java.nio.ByteBuffer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -22,8 +21,6 @@ import java.util.logging.Logger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toMap;
 import java.util.Date;
 
 /**
@@ -33,8 +30,6 @@ import java.util.Date;
 public class Connector {
 
     Connection conn;
-    MenuController meals;
-    List<MenuController> mealsList = new ArrayList<>();
     OnlineUser user;
     UserController response = new UserController();
 
@@ -65,6 +60,7 @@ public class Connector {
             pstmt.setString(1, cmd);
             int count = pstmt.executeUpdate();
             if (count == 1) {
+                //send response back to view
                 // response.userSuccessfullyUpdated(1);
             }
         } catch (SQLException ex) {
@@ -72,31 +68,12 @@ public class Connector {
         }
     }
 
-    public List showMenuQuery() {
-        try (Statement st = conn.createStatement()) {
-            ResultSet rs = st.executeQuery("Select name, description, price, type, is_veg from food_item");
-            while (rs.next()) {
-                String name = rs.getString(1);
-                String desc = rs.getString(2);
-                double price = rs.getDouble(3);
-                String type = rs.getString(4);
-                String veg = rs.getString(5);
-                meals = new MenuController(name, desc, price, type, veg);
-                mealsList.add(meals);
-            }
-
-            //meals.toString();
-        } catch (SQLException ex) {
-            Logger.getLogger(Connector.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return mealsList;
-    }
-
     public void deleteUserQuery(String cmd) {
         try (PreparedStatement pstmt = conn.prepareStatement("Delete from Online_user where email=?")) {
             pstmt.setString(1, cmd);
             int count = pstmt.executeUpdate();
             if (count == 1) {
+                 //send response back to view
                 // response.userSuccessfullyUpdated(2);
             }
         } catch (SQLException ex) {
@@ -126,6 +103,7 @@ public class Connector {
             pstmt.setString(2, cmd);
             int count = pstmt.executeUpdate();
             if (count == 1) {
+                 //send response back to view
                  //response.userSuccessfullyUpdated(3);
             }
         } catch (SQLException ex) {
@@ -160,13 +138,16 @@ public class Connector {
                 Address address = getAddressById(addressId);
                 user = new OnlineUser(userid,firstName,lastName,isAdmin, email, addressId, status); 
                 user.setAddress(address);
-                return user;
+            }
+            else {
+                //return a login failed response
             }
 
         } catch (Exception ex) {
             ex.getMessage();
         }
-        return null;
+        return user;
+        
     }
 
     public boolean registerNewUserQuery(String fname, String lname, String email, String passWrd,
