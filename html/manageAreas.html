@@ -1,9 +1,4 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
         <title>Mummy's Restaurant</title>
@@ -12,30 +7,12 @@ and open the template in the editor.
         <link rel="stylesheet" href="bootstrap.min.css" />
     </head>
     <body>
-        <div id="navContainer">
-        </div>
-        <div class="container">
-            <table class="table table-striped">
-                <thead class="thead-dark">
-                    <th>Zipcode</th>
-                    <th>Packages</th>
-                    <th>Remove</th>
-                </thead>
-                <tr>
-                    <td>12345</td>
-                    <td><a href="#">Packages</a></td>
-                    <td><a href="#">Remove</a></td>
-                </tr>
-                <tr>
-                    <td>23456</td>
-                    <td><a href="#">Packages</a></td>
-                    <td><a href="#">Remove</a></td>
-                </tr>
-            </table>
-            <a href="#">Add Area</a>
+        <div id="mainContainer">
         </div>
         <script>
             var NavBar;
+            var AreaTable;
+            var AreaRow;
         </script>
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="js/react.min.js"></script>
@@ -45,14 +22,31 @@ and open the template in the editor.
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
         <script src="js/Navbar.js" type="text/babel" ></script>
+        <script src="js/manageAreas.js" type="text/babel" ></script>
         <script type="text/babel">
         //change the following to test out whether the navbar changes correctly
         var testUser = {};
         testUser.email = "tester@email.com";
         testUser.isAdmin = false;
+        
+        var areaList = [
+            {
+                "zipcode" : 12345
+            },
+            {
+                "zipcode" : 23456
+            },
+            {
+                "zipcode" : 56791
+            }
+        ];
 
         React.render(
-            <NavBar user={testUser}/>, document.getElementById( "navContainer" )
+                <div>
+                    <NavBar user={testUser} />
+                    <AreaTable areas={areaList} />
+                </div>
+            , document.getElementById( "mainContainer" )
         );
         </script>
     </body>
