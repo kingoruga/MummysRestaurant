@@ -23,18 +23,53 @@ OrderTable = React.createClass({
             <OrderRow key={index} order={order} />
         );
     },
+    handleClickSort: function( event )
+    {
+        event.preventDefault();
+        //gets the data-column attribute from the html
+        var columnSortBy = event.target.dataset.column;
+        //TODO: need to either sort the data client side or send a new ajax request
+        //TODO: need to propagate this event up to parent component that has state
+        //TODO: remove the following when implemented
+        console.log( columnSortBy );
+        alert( "CLICKED" );
+    },
+    renderTableHeader: function()
+    {
+        return (
+            <thead className="thead-dark">
+                <th>Order ID 
+                    &nbsp;<a href='#' data-column="orderid"
+                        onClick={this.handleClickSort.bind( this )}>&#8595;</a>
+                </th>
+                <th>Email
+                    &nbsp;<a href='#' data-column="email"
+                        onClick={this.handleClickSort.bind( this )}>&#8595;</a>
+                </th>
+                <th>Name 
+                    &nbsp;<a href='#' data-column="name"
+                        onClick={this.handleClickSort.bind( this )}>&#8595;</a>
+                </th>
+                <th>Address 
+                    &nbsp;<a href='#' data-column="address"
+                        onClick={this.handleClickSort.bind( this )}>&#8595;</a>
+                </th>
+                <th>Price 
+                    &nbsp;<a href='#' data-column="price"
+                        onClick={this.handleClickSort.bind( this )}>&#8595;</a>
+                </th>
+                <th>Payment 
+                    &nbsp;<a href='#' data-column="payment"
+                        onClick={this.handleClickSort.bind( this )}>&#8595;</a>
+                </th>
+            </thead> 
+        );
+    },
     render: function()
     {
         return (
             <table className="table table-striped">
-                <thead className="thead-dark">
-                    <th>Order ID</th>
-                    <th>Email</th>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Price</th>
-                    <th>Payment</th>
-                </thead>
+                {this.renderTableHeader()}
                 {this.props.orders.map( this.eachOrder )}
             </table>
         );
