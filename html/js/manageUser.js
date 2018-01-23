@@ -27,7 +27,7 @@ var UserRow = React.createClass({
 
 });
 
-var UserTable = React.createClass({
+ UserTable = React.createClass({
 
     eachUser: function( user, index ) 
      { 
@@ -56,31 +56,7 @@ var UserTable = React.createClass({
 
 });
 
-         var userList = [
-            {
-                "userid" : 3002,
-                "name" : "John Doe",
-                "email" : "john@email.com",                
-                "status" : "Enabled",
-            },
-            {
-                "userid" : 4005,
-                "name" : "Jane Doe",
-                "email" : "jane@email.com",                
-                "status" : "Enabled",
-            }
-        ];
- 
-       React.render(
-               
-                    <UserTable users={userList} /> 
-                ,
-             document.getElementById('mainContainer' )
-        );
-
-        
        
- 
 
 
 
