@@ -1,0 +1,22 @@
+.food-image {
+    padding-right: 8px;
+}
+
+.item {
+    margin: 24px;
+}
+
+.item div a.btn {
+    margin-top: 4px;
+    color: black;
+    opacity: 0.6;
+}
+
+.dropdown {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.space { 
+    margin-left: 7px;
+}

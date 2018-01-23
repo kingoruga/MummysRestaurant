@@ -1,0 +1,310 @@
+disableUser
+	effects: sets the user with the email given to banned
+	parameters:
+		email, the email of the user that is to be disabled
+	returns: success/error
+	possible errors:
+		missing any parameters
+		email does not exist in database
+		not logged in as admin
+		user already disabled
+	connector method: disableUserQuery
+
+
+
+enableUser
+	effects: sets the user with the email given to no longer banned
+	parameters:
+		email, the email of the user that is to be enabled
+	returns: success/error
+	possible errors:
+		missing any parameters
+		email does not exist in database
+		not logged in as admin
+		user already enabled
+	connector method: enableUserQuery
+
+
+
+deleteUser
+	effects: deletes the user with the email given
+	parameters:
+		email, the email of the user that is to be deleted
+	returns: success/error
+	possible errors:
+		missing any parameters
+		email does not exist in database
+		not logged in as admin
+	connector method: deleteUserQuery
+
+
+
+changePassword
+	effects: changes the password for the user with email given
+	parameters:
+		email, the email of the user whose password is to be changed
+		password, the new password for the user
+	returns: success/error
+	possible errors:
+		missing any parameters
+		email does not exist in database
+		not logged in as admin
+	connector method: changePasswordQuery
+
+
+
+login
+	effects: attempts to login with the user's credentials given
+	parameters:
+		email, the email of the user who is trying to login
+		password, the password for the user
+	returns: user object on success,error otherwise
+	possible errors:
+		missing any parameters
+		email does not exist in database
+		password does not correspond to email given
+		already logged in
+		account of email given is disabled
+	connector method: loginQuery
+
+
+
+logout
+	effects: attempts to log out for the currently logged in user
+	parameters:
+		none
+	returns: success/error
+	possible errors:
+		not logged in
+	connector method: none,just clear out session data/cookie
+
+
+
+register
+	effects: attempts to create a new account
+	parameters:
+		email, the email for the new user
+		password, the password for the new user
+		fname, the first name for the new user
+		lname, the last name for the new user
+		address, the street address for the new user
+		city, the city for the new user
+		state, the state for the new user
+		zipCode, the zipcode for the new user
+	returns: user object on success,error otherwise
+	possible errors:
+		missing any parameters
+		email already in use
+		email given is not valid format
+		already logged in
+	connector method: registerNewUserQuery
+
+
+
+addArea
+	effects: attemps to add a new service area
+	parameters:
+		zipcode, the zipcode for the new service area
+	possible errors:
+		not logged in as admin
+		missing parameters
+		zipcode already a service area
+	returns: success/error
+	connector method: addZipToServiceArea
+
+
+
+removeArea
+	effects: attempts to remove the service area
+	parameters:
+		zipcode, the zipcode for the service area to be removed
+	possible errors:
+		missing parameters
+		not logged in as admin
+		zipcode is not an existing service area
+	returns: success/error
+	connector method: removeZipFromServiceArea
+
+
+
+adminAreas
+	effects: no side effects,just outputs a list
+	parameters:
+		none
+	possible errors:
+		none
+	returns: json list of zipcodes that represent service areas
+	connector method: getAreas
+
+
+
+
+foodInArea
+	effects: no side effect,just outputs a list
+	parameters:
+		zipcode, the zipcode that the food items returned should be in
+	possible errors:
+		missing parameters
+	returns: json list of food items that are in the service area given as zipcode
+		could return an empty list if there are no food items in that service area
+	connector method: getFoodItemsInArea
+
+
+
+foodAvailableFor
+	effects: no side effect,just outputs a list
+	parameters:
+		(?)email, the email of the user
+			could use session data to determine email instead
+	possible errors:
+		missing parameters,if not using session data
+	returns: json list of food items that are in the user's service area
+	connector method: foodAvailableFor
+
+
+	
+deleteFood
+	effects: attemps to remove the food with the name given
+	parameters:
+		name, the name of the food item that is to be deleted
+	possible errors:
+		missing parameters
+		not logged in as admin
+		food item with name does not exist
+	returns: success/error
+	connector method: deleteMenuItem
+		or: (?)removeFoodQuery, name
+
+
+
+loggedIn
+	effects: no side effect,just outputs info on the currently logged in user
+	parameters:
+		none
+	possible errors;
+		not logged in
+	returns: json encoded object that has the fields for the user who is currently logged in for the session
+	connector method: none,use session data
+
+
+
+adminOrders
+	effects: no side effect,just outputs list
+	parameters:
+		sorted,the name of the column that the list of orders is to be sorted by
+			(!)make sure that the value of this parameter is whitelisted before doing any queries with it
+	possible errors:
+		missing parameters
+		not logged in as admin
+		column name given as sorted is not valid
+	returns: json encoded list of orders
+	connector method(s): 
+		selectOrdersSortColumn
+		selectOrdersSortCustomerColumn
+		selectOrdersSortAddressZip
+
+
+
+addAreaPackage
+	effects: adds a food item to the service area given
+	parameters:
+		zipcode,the zipcode that represents the service area for the package to be added to
+		id, the id of the package that is to be added to the service area
+	possible errors:
+		missing parameters
+		not logged in as admin
+		zipcode not a valid service area
+		package id does not correspond to package in database
+		package id already available in service area
+	returns: success/error
+	connector method: addPackagetoArea
+
+
+
+removeAreaPackage
+	effects: removes a food item from the service area given
+	parameters:
+		zipcode,the zipcode that represents the service area for the package to be removed from
+		id, the id of the package that is to be removed  from the service area
+	possible errors:
+		missing parameters
+		not logged in as admin
+		zipcode not a valid service area
+		package id does not correspond to package in database
+		package id not available in service area
+	returns: success/error
+	connector method: removePackageFromArea
+
+
+
+createOrder
+	effects: creates a new order for the user
+	parameters:
+		payment, the payment method for the order
+		deliveryDate, the delivery date for the order
+		deliveryTime, the delivery time for the order
+		items, the food items that are in the order
+		price, the price of the order
+		===
+		ADDRESS,all are optional,if not given then use user's address from session data
+		===
+		street,optional,the street address that the order is to be delivered to
+		city,optional,the city that the order is to be delivered to
+		state,optional,the state that the order is to be delivered to
+		zipCode,optional,the zip code that the order is to be delivered to
+	possible errors:
+		missing required parameters
+		user not logged in
+		food items not available in zipcode given
+		payment type not valid,has to be cash/card
+		delivery date too far in future,max 30 days from today
+		no items in order
+	returns: success/error
+	connector method: addOrder
+
+	
+	
+userOrders
+	effects: no side effect,just returns orders for the currently logged in user
+	parameters:
+		none
+	possible errors:
+		not logged in
+	returns: json object containing list of orders that the user currently logged in has created
+	connector method: none yet,need to implement
+
+
+
+addFood
+	effects: attempts to add a new food item
+	parameters;
+		name,the name of the food item to be added
+		desc,the description of the food item to be added
+		price, the price of the food item to be added
+		type, the type of the food item to be added
+		veg, whether the food item isVeg or not
+		(?)image, the image that showcases the food item
+	possible errors:
+		missing parameters
+		not logged in as admin
+		food item with name given already exists
+		invalid price(negative)
+	returns: success/error
+	connector method: createFoodQuery
+
+
+
+availableForFood
+	effects: no side effect,outputs a list
+	parameters:
+		id, the id of the food item that the availabilities are for
+	possible errors:
+		missing parameters
+		id is not a valid food item,does not exist in database
+	returns: json encoded list of zipcodes that the food item is available in
+	connector method: getAvailabilities
+
+
+
+
+
