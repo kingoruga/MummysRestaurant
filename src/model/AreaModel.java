@@ -13,12 +13,12 @@ import java.util.List;
  */
 public class AreaModel {
     Connector conn;
-    public boolean addArea(String zip){
+    public boolean addArea(int zip){
         conn = new Connector();
         return conn.addZipToServiceArea(zip);
     }
     
-    public boolean removeArea(String zip){
+    public boolean removeArea(int zip){
         conn = new Connector();
         return conn.removeZipFromServiceArea(zip);
     }
@@ -28,15 +28,15 @@ public class AreaModel {
         return conn.getAreas();
     }
     
-    public List<String> getFoodInAreas(String zip){
+    public List<String> getFoodInAreas(int zip){
         conn = new Connector();
         return conn.getFoodItemsInArea(zip);
     }
-    public boolean addPackagetoArea(String zip, String packageNo){
+    public boolean addPackagetoArea(int zip, String packageNo){
         conn = new Connector();
         return conn.addPackagetoArea(zip,packageNo);
     }
-    public boolean removePackageFromArea(String zip, String packageNo){
+    public boolean removePackageFromArea(int zip, String packageNo){
         conn = new Connector();
         return conn.removePackageFromArea(zip,packageNo);
     }

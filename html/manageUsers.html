@@ -11,6 +11,7 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="../css/bootstrap.min.css" />
+  
     </head>
     <body>
         <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-dark">
@@ -23,61 +24,16 @@ and open the template in the editor.
             <a class="nav-link text-light" href="#">Manage Orders</a>
             <a class="nav-link text-light" href="#">Logout</a>
         </nav>
-        <div class="container">
-            <table class="table table-striped">
-                <thead class="thead-dark">
-                    <th>User ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                    
-                </thead>
-                <tr>
-                    <td>1001</td>
-                    <td>Joseph Malone</td>
-                    <td>jmalone@gmail.com</td>
-                    <td>Enabled</td>
-                    <td><div class="btn-group">
-  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Manage User
-  </button>
-  <div class="dropdown-menu">
-    <a class="dropdown-item" href="#">Enable</a>
-    <a class="dropdown-item" href="#">Disable</a>
-    <a class="dropdown-item" href="#">Change Password</a>
-    <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="#">Delete User</a>
-  </div>
-</div></td>
-                </tr>
-                <tr>
-                    <td>1023</td>
-                    <td>Sena Higer</td>
-                    <td>shiger@gmail.com</td>
-                    <td>Enabled</td>
-                    <td><div class="btn-group">
-  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Manage User
-  </button>
-  <div class="dropdown-menu">
-    <a class="dropdown-item" href="#">Enable</a>
-    <a class="dropdown-item" href="#">Disable</a>
-    <a class="dropdown-item" href="#">Change Password</a>
-    <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="#">Delete User</a>
-  </div>
-                        </div></td>
-                </tr>
-            </table>
-        </div>
-        <script src="../js/manageUser.js" type="text/babel" ></script>
+        
+        <div id="mainContainer"></div>
+
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-         <script src="../js/react.min.js"></script>
+        <script src="../js/react.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.29/browser.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/reactstrap/4.8.0/reactstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
-        
+              <script src="../js/manageUser.js" type="text/babel" ></script>
     </body>
 </html>
