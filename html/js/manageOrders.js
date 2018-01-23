@@ -26,9 +26,11 @@ OrderTable = React.createClass({
     handleClickSort: function( event )
     {
         event.preventDefault();
+        //gets the data-column attribute from the html
+        var columnSortBy = event.target.dataset.column;
         //TODO: need to either sort the data client side or send a new ajax request
         //TODO: need to propagate this event up to parent component that has state
-        var columnSortBy = event.target.dataset.column;
+        //TODO: remove the following when implemented
         console.log( columnSortBy );
         alert( "CLICKED" );
     },
