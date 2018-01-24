@@ -192,10 +192,10 @@ public class Connector {
         return false;
     }
 
-    public boolean addZipToServiceArea(String zip){
+    public boolean addZipToServiceArea(int zip){
         try{
             PreparedStatement pstmt = conn.prepareStatement("insert into service_areas (zip_code) values (?)");
-            pstmt.setString(1,zip);
+            pstmt.setInt(1,zip);
             int count = pstmt.executeUpdate();
             if (count == 1){
                 return true;
@@ -206,10 +206,10 @@ public class Connector {
         return false;
     }
 
-    public boolean removeZipFromServiceArea(String zip){
+    public boolean removeZipFromServiceArea(int zip){
         try{
             PreparedStatement pstmt = conn.prepareStatement("Delete from service_areas where zip_code = ?");
-            pstmt.setInt(1,Integer.parseInt(zip));
+            pstmt.setInt(1,zip);
             int count = pstmt.executeUpdate();
             if (count == 1){
                 return true;
@@ -234,17 +234,17 @@ public class Connector {
         return allAreas;
     }
     
-    public List getFoodItemsInArea(String zip){
+    public List getFoodItemsInArea(int zip){
         List<String> foodInArea = new ArrayList();
         try{
             PreparedStatement pstmt = conn.prepareStatement("select fi.food_item_id,name || ' - ' || description as Food_Item from food_item fi join availability a on fi.food_item_id = a.food_item_id join service_areas se on a.zip_code = se.zip_code where se.zip_code = ?");
-            pstmt.setInt(1, Integer.parseInt(zip));
+            pstmt.setInt(1, zip);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()){
                 foodInArea.add(rs.getString(1)+" "+rs.getString(2));
             }
         }catch(SQLException ex){
-            System.out.println("Unable to get food in "+zip);
+            System.out.println("Unable to get food in " + zip);
         }
         return foodInArea;
     }
@@ -507,11 +507,11 @@ public class Connector {
 
 
 
-    public boolean addPackagetoArea(String zip,String packageNo){
+    public boolean addPackagetoArea(int zip,String packageNo){
        try{
            PreparedStatement pstmt = conn.prepareStatement("Insert into Availability (food_item_id,zip_code) values (?,?)");
            pstmt.setString(1,packageNo);
-           pstmt.setString(2,zip);
+           pstmt.setInt(2,zip);
            int count = pstmt.executeUpdate();
            if (count == 1)
                return true;
@@ -521,11 +521,11 @@ public class Connector {
        return false;
    }
    
-    public boolean removePackageFromArea(String zip,String packageNo){
+    public boolean removePackageFromArea(int zip,String packageNo){
        try{
            PreparedStatement pstmt = conn.prepareStatement("Delete from Availability where zip_code = ? and food_item_id = ?");
            pstmt.setString(2,packageNo);
-           pstmt.setString(1,zip);
+           pstmt.setInt(1,zip);
            int count = pstmt.executeUpdate();
            if (count == 1)
                return true;

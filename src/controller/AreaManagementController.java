@@ -16,22 +16,22 @@ import model.AreaModel;
 public class AreaManagementController {
     AreaModel am = new AreaModel();
 
-    public boolean addArea(String zip){
+    public boolean addArea(int zip){
         return am.addArea(zip);
     }
-    public boolean removeArea(String zip){
+    public boolean removeArea(int zip){
         return am.removeArea(zip);
     }
     public List<String> getAreas(){
         return am.getAreas();
     }
-    public List<String> getFoodInAreas(String zip){
+    public List<String> getFoodInAreas(int zip){
         return am.getFoodInAreas(zip);
     }
-    public boolean addPackagetoArea(String zip,String packageNo){
+    public boolean addPackagetoArea(int zip,String packageNo){
         return am.addPackagetoArea(zip, packageNo);
     }
-    public boolean removePackageFromArea(String zip,String packageNo){
+    public boolean removePackageFromArea(int zip,String packageNo){
         return am.removePackageFromArea(zip,packageNo);
     }
 }

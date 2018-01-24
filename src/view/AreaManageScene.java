@@ -79,7 +79,7 @@ public class AreaManageScene extends Scene {
     {
         AreaManagementController amc = new AreaManagementController();
         System.out.print( "Enter zip code to remove: " );
-        String zip = scanner.nextLine();
+        int zip = Integer.parseInt(scanner.nextLine());
         //TODO: need to put together when Database functionality in place
         if (!amc.removeArea(zip)){
             System.out.println("Unable to remove area. Current Orders Exist");
@@ -91,7 +91,7 @@ public class AreaManageScene extends Scene {
     {
         AreaManagementController amc = new AreaManagementController();
         System.out.print( "Enter new zip code: " );
-        String zip = scanner.nextLine();
+        int zip = Integer.parseInt(scanner.nextLine());
         if (amc.addArea(zip))
         {
             System.out.println( "Added new delivery area: " + zip );
@@ -108,7 +108,7 @@ public class AreaManageScene extends Scene {
         //TODO: display packages
         AreaManagementController amc = new AreaManagementController();
         System.out.print( "Enter zip code: " );
-        String zip = scanner.nextLine();
+        int zip = Integer.parseInt(scanner.nextLine());
         List<String> packages = amc.getFoodInAreas(zip);
         for(int i = 0;i<packages.size();i++){
             System.out.println(packages.get(i));
@@ -147,7 +147,7 @@ public class AreaManageScene extends Scene {
         //System.out.println( "TODO: need package availability functionality" );
     }
     
-    public void addPackagetoArea(AreaManagementController amc, String zip){
+    public void addPackagetoArea(AreaManagementController amc, int zip){
         System.out.print( "Enter package number: " );
         String packageNo = scanner.nextLine();
         if (!amc.addPackagetoArea(zip,packageNo)){
@@ -158,7 +158,7 @@ public class AreaManageScene extends Scene {
         }
     }
     
-    public void removePackageFromArea(AreaManagementController amc,String zip){
+    public void removePackageFromArea(AreaManagementController amc,int zip){
         System.out.print( "Enter package number: " );
         String packageNo = scanner.nextLine();
         if (!amc.removePackageFromArea(zip,packageNo)){
