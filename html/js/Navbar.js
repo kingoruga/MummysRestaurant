@@ -10,7 +10,7 @@ NavBar = React.createClass({
     {
         return (
         <nav className="navbar sticky-top navbar-expand-lg navbar-light bg-dark">
-            <a className="navbar-brand" href="Home.html">Mummy's Restaurant</a>
+            <a className="navbar-brand" href="index.html">Mummy's Restaurant</a>
             <a className="nav-link text-light" href="viewMenu.html">View Menu</a>
             <a className="nav-link text-light" href="myOrders.html">My Orders(0)</a>
             <a className="nav-link text-light" href="manageUsers.html">Manage Users</a>
@@ -25,7 +25,7 @@ NavBar = React.createClass({
     {
         return (
         <nav className="navbar sticky-top navbar-expand-lg navbar-light bg-dark">
-            <a className="navbar-brand" href="Home.html">Mummy's Restaurant</a>
+            <a className="navbar-brand" href="index.html">Mummy's Restaurant</a>
             <a className="nav-link text-light" href="viewMenu.html">View Menu</a>
             <a className="nav-link text-light" href="myOrders.html">My Orders(0)</a>
             <a className="nav-link text-light" href="#">Logout</a>
@@ -36,7 +36,7 @@ NavBar = React.createClass({
     {
         return (
         <nav className="navbar sticky-top navbar-expand-lg navbar-light bg-dark">
-            <a className="navbar-brand" href="Home.html">Mummy's Restaurant</a>
+            <a className="navbar-brand" href="index.html">Mummy's Restaurant</a>
             <a className="nav-link text-light" href="viewMenu.html">View Menu</a>
             <a className="nav-link text-light" href="#">Login</a>
             <a className="nav-link text-light" href="#">Register</a>
